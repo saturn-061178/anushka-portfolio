@@ -12,9 +12,17 @@ python -m http.server 4173 --directory new-site
 
 ## Host it
 
-Deploy this folder as-is. On Vercel, set the project's **Root Directory** to `new-site`
-(framework preset "Other", no build command). `vercel.json` sets asset caching and
-`404.html` is the not-found page.
+The site is live on GitHub Pages: <https://saturn-061178.github.io/anushka-portfolio/>
+
+It is published from the repository <https://github.com/saturn-061178/anushka-portfolio>, which holds only the
+contents of this folder. To publish a change, commit it in the main project and run this from the project root:
+
+```bash
+git subtree push --prefix new-site pages main
+```
+
+Raise the `?v=` number on the CSS and JS links in `index.html` first, so visitors get the new files.
+The live site updates a minute or two after the push.
 
 ## Layout
 
