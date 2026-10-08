@@ -14,3 +14,5 @@
 .cmail a{padding-bottom:2px;border-bottom:1px solid #F8F5F066;transition:color .25s,border-color .25s}
 .cmail a:hover{color:#FFB8C8;border-color:#FFB8C8}
 @media(max-width:600px){.hmail{font-size:10.5px}}
+/* on very short screens there is no room for the second line in the hero; it stays in the contact section */
+@media(max-height:690px){.hmail+.hmail{display:none}}
