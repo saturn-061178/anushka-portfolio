@@ -1,0 +1,6 @@
+/* Heading weight for the whole site. Headings used to be 800–900 (very bold);
+   every display heading now reads this one value. Fraunces is loaded from 300 to 900. */
+:root{--hw:400}
+
+/* lighter headings need a little less squeeze between letters */
+.tx h1,.reel h2,.apr h2,.ab h2,.ct h2,.cn h2,.pgt,.pgnext b,.kb span{letter-spacing:-.025em}

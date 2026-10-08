@@ -1,0 +1,113 @@
+/* The Projects page (js/work-page.js): dark, one large panel per project. */
+#page.wk{background:#1d1210;color:var(--parch)}
+#page.wk .pgh{background:linear-gradient(#1d1210 70%,transparent)}
+#page.wk .pgb{border-color:var(--parch);color:var(--parch)}#page.wk .pgb:hover{background:var(--parch);color:var(--esp)}
+#page.wk .pgn{color:#F8F5F099}
+#page.wk .pgtabs a:hover{border-color:var(--parch)}#page.wk .pgtabs a.on{background:var(--parch);color:var(--esp)}
+#page.wk .pgfil button{border-color:#F8F5F066;color:var(--parch)}#page.wk .pgfil button.on{background:var(--parch);color:var(--esp);border-color:var(--parch)}
+
+.wkm{overflow:hidden}
+.wkh{max-width:1440px;margin:0 auto;padding:clamp(30px,7vh,80px) var(--gx) clamp(20px,4vh,40px)}
+.wkt{font-family:Fraunces,Georgia,serif;font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:var(--hw);font-size:clamp(2.8rem,9vw,8.5rem);line-height:.98;letter-spacing:-.03em;text-transform:lowercase;margin:16px 0 22px}
+.wkt .l{display:block;overflow:hidden;padding-bottom:.14em;margin-bottom:-.14em}.wkt .l>span{display:block}
+.wkt em{text-transform:none;color:#FFB8C8;letter-spacing:-.02em}
+.wkl{font-size:clamp(1rem,1.5vw,1.3rem);max-width:44ch;color:#F8F5F0cc}
+#page.wk .pgfil{margin:30px 0 0}
+
+/* header: text on the left, a wall of the project illustrations on the right */
+.wkh{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.95fr);column-gap:clamp(24px,5vw,80px);align-items:center}
+.wkh>*{grid-column:1}.wkh>.wkc{grid-column:2;grid-row:1/span 5}
+.wkc{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.4vw,20px);rotate:-3deg}
+.wkc-i{position:relative;aspect-ratio:1;padding:13%;border:0;border-radius:16px;background:#F8F5F00d;color:var(--parch);box-shadow:inset 0 0 0 1px #F8F5F022;cursor:pointer;transition:background .35s,color .35s,box-shadow .35s,scale .45s var(--ease),rotate .45s var(--ease)}
+.wkc-i:nth-child(even){translate:0 18%}
+.wkc-i span{position:absolute;left:10px;top:8px;font-size:10px;letter-spacing:.1em;color:var(--ac)}
+.wkc-i:hover,.wkc-i:focus-visible{background:var(--parch);color:var(--esp);box-shadow:8px 8px 0 var(--ac);scale:1.08;rotate:3deg;z-index:2}
+
+/* side index */
+.wkx{position:fixed;right:14px;top:50%;translate:0 -50%;z-index:6;display:grid;gap:6px;justify-items:end;opacity:0;pointer-events:none;transition:opacity .4s}
+.wkx.on{opacity:1;pointer-events:auto}
+.wkx button{display:flex;align-items:center;gap:8px;padding:3px 0;border:0;background:none;color:#F8F5F066;font:inherit;letter-spacing:.1em;cursor:pointer}
+.wkx i{font-style:normal;font-size:10.5px}
+.wkx b{font-weight:400;font-size:10.5px;max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .4s var(--ease)}
+.wkx button::after{content:"";width:14px;height:2px;background:currentColor;transition:width .35s var(--ease),background .35s}
+.wkx button:hover b,.wkx button.on b{max-width:120px}
+.wkx button:hover,.wkx button.on{color:var(--parch)}.wkx button.on::after{width:34px;background:var(--ac)}
+@media(max-width:1180px){.wkx{display:none}}
+
+/* names of the projects drifting past */
+.wkmq{overflow:hidden;white-space:nowrap;border-block:1px solid #F8F5F022;padding:16px 0;margin:clamp(20px,4vh,44px) 0 0}
+.wkmq div{display:inline-block;font:var(--hw) clamp(1.3rem,2.4vw,2rem)/1 Fraunces,Georgia,serif;font-variation-settings:"SOFT" 100,"WONK" 1;text-transform:lowercase;letter-spacing:-.02em;color:#F8F5F0b3}
+.wkmq i{font-style:normal;color:var(--pink);margin:0 .5em;font-size:.7em;vertical-align:middle}
+
+/* ---- one project ---- */
+.wklist{max-width:1440px;margin:0 auto;padding:0 var(--gx)}
+.wkp{position:relative;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(24px,5vw,80px);align-items:center;padding:clamp(48px,10vh,120px) 0;border-bottom:1px solid #F8F5F022;color:inherit}
+.wkp:nth-child(even){grid-template-columns:minmax(0,7fr) minmax(0,5fr)}.wkp:nth-child(even) .wkp-tx{order:2}
+.wkp.off{display:none}
+.wkp-no{position:absolute;left:-.06em;top:clamp(10px,3vh,40px);font:var(--hw) clamp(7rem,22vw,20rem)/.8 Fraunces,Georgia,serif;font-variation-settings:"SOFT" 100,"WONK" 1;letter-spacing:-.05em;color:transparent;-webkit-text-stroke:1px #F8F5F01f;pointer-events:none;user-select:none}
+.wkp:nth-child(even) .wkp-no{left:auto;right:-.06em}
+.wkp-tx{position:relative}
+.wkp-k{display:block;letter-spacing:.1em;color:#F8F5F099}.wkp-k b{font-weight:500;color:var(--ac)}
+.wkp h2{font-family:Fraunces,Georgia,serif;font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:var(--hw);font-size:clamp(2.2rem,5.2vw,4.6rem);line-height:1;letter-spacing:-.03em;text-transform:lowercase;margin:14px 0 18px;transition:transform .5s var(--ease)}
+.wkp p{color:#F8F5F0c4;max-width:40ch;font-size:clamp(.98rem,1.25vw,1.12rem)}
+.wkp-ft{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-top:26px}
+.wkp-go{display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border:1.5px solid var(--parch);border-radius:99px;letter-spacing:.1em;transition:background .3s,color .3s,border-color .3s}
+.wkp-go i{font-style:normal;transition:transform .4s var(--ease)}
+.wkp:hover .wkp-go{background:var(--ac);border-color:var(--ac);color:#1d1210}.wkp:hover .wkp-go i{transform:translateX(6px)}
+.wkp:hover h2{transform:translateX(10px)}
+.wkp-st{padding:8px 12px;border:1.5px dashed var(--ac);border-radius:99px;color:var(--ac);letter-spacing:.1em}
+
+.wkp-vis{position:relative;perspective:1200px}
+/* each project glows in its own colour */
+.wkp-vis::before{content:"";position:absolute;inset:-18% -12%;background:radial-gradient(closest-side,var(--ac),transparent);opacity:.2;filter:blur(30px);pointer-events:none;transition:opacity .6s}
+.wkp:hover .wkp-vis::before{opacity:.38}
+.wkp-no{transition:-webkit-text-stroke-color .5s}.wkp:hover .wkp-no{-webkit-text-stroke-color:var(--ac)}
+.wkp-fact{padding:8px 0;color:#F8F5F099;letter-spacing:.1em;text-transform:uppercase}
+.wkp-cov{position:relative}
+.wkp-cov{aspect-ratio:16/10;border-radius:10px;overflow:hidden;background:#241512;box-shadow:0 40px 80px #0008;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transition:transform .5s var(--ease)}
+.wkp-cov img,.wkp-cov svg{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 0;transition:transform 1.2s var(--ease)}
+.wkp:hover .wkp-cov img,.wkp:hover .wkp-cov svg{transform:scale(1.06)}
+.wkp-cov::after{content:"";position:absolute;inset:0;border-radius:10px;background:radial-gradient(circle at var(--sx,50%) var(--sy,50%),#ffffff55,transparent 46%);mix-blend-mode:soft-light;opacity:0;transition:opacity .35s;pointer-events:none}
+.wkp:hover .wkp-cov::after{opacity:1}
+/* the illustration rides on the corner of the cover */
+.wkp-ill{position:absolute;right:-4%;bottom:-13%;width:clamp(120px,36%,230px);padding:clamp(12px,1.6vw,22px);border-radius:16px;background:var(--parch);color:var(--esp);box-shadow:0 0 0 2px var(--esp),10px 10px 0 var(--ac);rotate:4deg;transition:rotate .6s var(--ease),translate .6s var(--ease)}
+.wkp:nth-child(even) .wkp-ill{right:auto;left:-4%;rotate:-4deg}
+.wkp:hover .wkp-ill{rotate:-2deg;translate:0 -10px}.wkp:nth-child(even):hover .wkp-ill{rotate:2deg}
+
+#page.wk .pjctl{left:auto;right:14px;translate:none}
+.wkend{display:block;text-align:center;padding:clamp(60px,14vh,160px) var(--gx);color:var(--parch);transition:background .4s}
+.wkend:hover{background:var(--pink)}
+.wkend small{display:block;letter-spacing:.14em;opacity:.7;margin-bottom:16px}
+.wkend b{font-family:Fraunces,Georgia,serif;font-variation-settings:"SOFT" 100,"WONK" 1;font-weight:var(--hw);font-size:clamp(2.6rem,9vw,8rem);line-height:1;letter-spacing:-.03em;text-transform:lowercase}
+
+@media(max-width:800px){
+ .wkh{grid-template-columns:1fr}.wkh>.wkc{grid-column:1;grid-row:auto;margin:34px 0 10px;rotate:0deg;gap:8px}.wkc-i:nth-child(even){translate:none}.wkc-i span{display:none}
+ .wkp,.wkp:nth-child(even){grid-template-columns:1fr;gap:34px;padding:56px 0 76px}
+ .wkp:nth-child(even) .wkp-tx{order:0}
+ .wkp-ill,.wkp:nth-child(even) .wkp-ill{right:4%;left:auto;bottom:-44px;width:112px;rotate:4deg}
+}
+
+@media(prefers-reduced-motion:no-preference){
+ .wkmq div{animation:wkMq 38s linear infinite}@keyframes wkMq{to{transform:translateX(-50%)}}
+ .wkt .l>span{transform:translateY(110%);transition:transform 1.1s var(--ease)}.wkt .l:nth-child(2)>span{transition-delay:.12s}
+ .wkh.in .wkt .l>span{transform:none}
+ .wkh .pgk,.wkl,.wkh .pgfil{opacity:0;transform:translateY(20px);transition:opacity .9s ease .35s,transform 1s var(--ease) .35s}
+ .wkh.in .pgk,.wkh.in .wkl,.wkh.in .pgfil{opacity:1;transform:none}
+ /* the illustration wall deals in, then each tile idles on its own beat */
+ .wkc-i{opacity:0;transform:translateY(40px) scale(.8);transition:opacity .7s ease calc(.5s + var(--i)*70ms),transform .9s cubic-bezier(.3,1.4,.5,1) calc(.5s + var(--i)*70ms),background .35s,color .35s,box-shadow .35s,scale .45s var(--ease),rotate .45s var(--ease)}
+ .wkh.in .wkc-i{opacity:1;transform:none}
+ .wkc-i .ill{animation:wkIdle 5s ease-in-out infinite;animation-delay:calc(var(--i)*-.7s)}@keyframes wkIdle{50%{translate:0 -5px}}
+ /* a panel arrives: cover wipes open, text rises, number drifts, illustration pops */
+ .wkp-cov{clip-path:inset(0 100% 0 0 round 10px);transition:clip-path 1.3s var(--ease),transform .5s var(--ease)}
+ .wkp:nth-child(even) .wkp-cov{clip-path:inset(0 0 0 100% round 10px)}
+ .wkp.in .wkp-cov{clip-path:inset(0 0 0 0 round 10px)}
+ .wkp:hover .wkp-cov{transition:clip-path 1.3s var(--ease),transform .12s linear}
+ .wkp-tx>*{opacity:0;transform:translateY(34px);transition:opacity .9s ease,transform 1s var(--ease)}
+ .wkp-tx>:nth-child(2){transition-delay:.08s}.wkp-tx>:nth-child(3){transition-delay:.16s}.wkp-tx>:nth-child(4){transition-delay:.24s}
+ .wkp.in .wkp-tx>*{opacity:1;transform:none}
+ .wkp.in:hover h2{transform:translateX(10px)}
+ .wkp-no{opacity:0;transform:translateY(60px);transition:opacity 1.2s ease .1s,transform 1.6s var(--ease) .1s}.wkp.in .wkp-no{opacity:1;transform:none}
+ .wkp-ill{scale:0;transition:scale .9s cubic-bezier(.3,1.5,.5,1) .55s,rotate .6s var(--ease),translate .6s var(--ease)}
+ .wkp.in .wkp-ill{scale:1}
+ .wkend b{display:inline-block;transition:transform .6s var(--ease)}.wkend:hover b{transform:translateX(18px)}
+}
