@@ -10,7 +10,7 @@ nav .cbk{position:relative;z-index:1;margin-left:4px}
 .pgh .cbk:hover{background:var(--esp);color:var(--parch)}
 #page.wk .pgh .cbk:hover,#page.dk .pgh .cbk:hover{background:var(--parch);color:var(--esp)}
 @media(max-width:1000px){.pgh .pgtabs{display:none}}
-@media(max-width:600px){nav .cbk{padding:0 10px;font-size:12.5px;gap:0}nav .cbk svg{display:none}.pgh .cbk{padding:0;width:42px;justify-content:center}.pgh .cbk span{display:none}.pgr{gap:6px}}
+@media(max-width:600px){nav .cbk{flex:none;width:40px;height:40px;padding:0;margin-left:2px;justify-content:center}nav .cbk span{display:none}.pgh .cbk{padding:0;width:42px;justify-content:center}.pgh .cbk span{display:none}.pgr{gap:6px}}
 
 /* ---- the form ---- */
 #cb{border:0;padding:0;background:none;color:var(--esp);max-width:none;max-height:none;width:100%;height:100%;overflow:auto}

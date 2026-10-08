@@ -51,7 +51,7 @@ cbForm.addEventListener('submit',e=>{e.preventDefault();if(cbForm.classList.cont
   .catch(()=>cbFail('COULDN’T SEND. CHECK YOUR CONNECTION AND TRY AGAIN.'))});
 
 // ---- the button: once in the main menu, and in the header of every full-screen page ----
-const CB_BTN='<button type="button" class="cbk" data-cb aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.600 3h3l1.500 4.500l-2.200 1.400a12 12 0 0 0 6.200 6.200l1.400-2.200l4.500 1.500v3a2 2 0 0 1-2.200 2A17 17 0 0 1 4.600 5.200A2 2 0 0 1 6.600 3Z"/></svg><span>Call back</span></button>';
+const CB_BTN='<button type="button" class="cbk" data-cb aria-haspopup="dialog" aria-label="Request a call back"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.600 3h3l1.500 4.500l-2.200 1.400a12 12 0 0 0 6.200 6.200l1.400-2.200l4.500 1.500v3a2 2 0 0 1-2.200 2A17 17 0 0 1 4.600 5.200A2 2 0 0 1 6.600 3Z"/></svg><span>Call back</span></button>';
 $('nav').insertAdjacentHTML('beforeend',CB_BTN);
 addEventListener('click',e=>{if(e.target.closest&&e.target.closest('[data-cb]')){e.preventDefault();cbOpen()}});
 function cbHeader(){const h=pageEl.querySelector('.pgh');if(!h||h.querySelector('[data-cb]'))return;
