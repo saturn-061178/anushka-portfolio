@@ -8,6 +8,8 @@
 /* the email address, shown in the hero and in the contact section */
 .hmail{display:table;margin-top:14px;padding-bottom:2px;border-bottom:1px solid currentColor;color:var(--brown);letter-spacing:.04em;text-transform:none;transition:color .25s}
 .hmail:hover{color:var(--pink)}
+.hmail+.hmail{margin-top:8px}
+.cmail+.cmail{margin-top:10px}
 .cmail{margin-top:18px;letter-spacing:.06em}
 .cmail a{padding-bottom:2px;border-bottom:1px solid #F8F5F066;transition:color .25s,border-color .25s}
 .cmail a:hover{color:#FFB8C8;border-color:#FFB8C8}
