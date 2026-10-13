@@ -5,7 +5,8 @@ const calm=matchMedia('(prefers-reduced-motion:reduce)').matches;
 let motionOff=false;try{motionOff=localStorage.getItem('motion')=='off'}catch(e){}
 function still(){return calm||motionOff}
 function setMotion(on){motionOff=!on;try{localStorage.setItem('motion',on?'on':'off')}catch(e){}applyRoute(location.hash)}
-function slateMs(){return still()?0:1000} // how long the title slate covers a project page
+let slateSeen=false; // the title slate plays for the first project opened, not on every one
+function slateMs(){return still()||slateSeen?0:1000} // how long the title slate covers a project page
 
 // ---- 1. title slate: a film-style card that plays when a project opens ----
 function slate(i){const p=PROJECTS[i],no=String(i+1).padStart(2,'0'),roll=[...new Set(['00',String(Math.max(0,i-1)).padStart(2,'0'),String(i).padStart(2,'0'),no])];
@@ -27,11 +28,13 @@ function pageMotion(i){
  if(still())return;
  const pj=pageEl.querySelector('.pj'),nx=pj&&pj.querySelector('.pgnext');
  if(nx)nx.insertAdjacentHTML('beforebegin',titleBand(PROJECTS[i]));
- slate(i)}
+ if(!slateSeen){slateSeen=true;slate(i)}}
 
 // ---- 4. scroll physics inside a project page: the band slides, the frames lean with scroll speed ----
 if(!calm){let last=0,vel=0,run=false;
- const tick=()=>{vel*=.86;pageEl.style.setProperty('--vsk',(vel*.022).toFixed(3)+'deg');if(Math.abs(vel)>.4)requestAnimationFrame(tick);else{run=false;pageEl.style.setProperty('--vsk','0deg')}};
+ // the lean is set on the grids themselves; setting it on the page would restyle everything in it each frame
+ const lean=v=>pageEl.querySelectorAll('.gg,.gw').forEach(e=>e.style.setProperty('--vsk',v));
+ const tick=()=>{vel*=.86;lean((vel*.022).toFixed(2)+'deg');if(Math.abs(vel)>.4)requestAnimationFrame(tick);else{run=false;lean('0deg')}};
  pageEl.addEventListener('scroll',()=>{const y=pageEl.scrollTop,d=y-last;last=y;
   if(Math.abs(d)<400)vel=Math.max(-60,Math.min(60,vel+d*.5));if(!run){run=true;requestAnimationFrame(tick)}
   const mq=pageEl.querySelector('.pjmq');if(mq){const r=mq.getBoundingClientRect();if(r.top<innerHeight&&r.bottom>0)mq.style.setProperty('--mx',((innerHeight-r.top)*.35).toFixed(1)+'px')}},{passive:true});

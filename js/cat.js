@@ -41,7 +41,7 @@
  cat.addEventListener('pointerup',release);cat.addEventListener('pointercancel',release);
  document.addEventListener('pointerover',e=>{if(st!=='home'||sleeping)return;const t=e.target;if(!t.closest)return;if(t.closest('.cb.wa')&&!tip.wa){tip.wa=1;say('psst… WhatsApp is fastest ♡',3000)}else if(t.closest('.labcv')&&!tip.lab){tip.lab=1;say('drag it around! ↻',2800)}else if(t.closest('#board')&&!tip.brd){tip.brd=1;say('drag those photos around!',3000)}});
  setTimeout(()=>{x=W()+80;y=floor();seen=true;go(hx,floor(),'back');nextAct=performance.now()+3800},3300);
- function tick(now){const dt=Math.min(.05,(now-last)/1000);last=now;
+ function tick(now){if(held()){last=now;requestAnimationFrame(tick);return}const dt=Math.min(.05,(now-last)/1000);last=now;
   if(pose=='sit'){if(now<lookUntil){px2=(Math.sin(now/260)*.9)}const cx=x+SZ()/2,cy=y+CH()*.4,dx=px-cx,dy=py-cy,dd=Math.hypot(dx,dy)||1,k=Math.min(1,dd/300),sc=mood=='shark'?5:3.2,tr=now<lookUntil?`translate(${(px2*sc).toFixed(2)}px,${(Math.sin(now/410)*sc*.3).toFixed(2)}px)`:`translate(${(dx/dd*sc*k).toFixed(2)}px,${(dy/dd*sc*.8*k).toFixed(2)}px)`;eyeEls.forEach(e=>{if(e)e.style.transform=tr})}
   if(now>manualUntil&&typeof secs!=='undefined'){let c=0;tops.forEach((t,i)=>{if(scrollY+innerHeight*.5>=t)c=i});const id=secs[c][0];if(id!==lastSec){lastSec=id;if(SM[id])setMood(SM[id],st=='home'&&seen)}}
   if(Math.abs(scrollY-lastY)>1){lastY=scrollY;lastAct=now;wake();if(st=='walk'||st=='greet')retreat()}

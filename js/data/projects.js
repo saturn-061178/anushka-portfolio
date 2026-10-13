@@ -9,7 +9,7 @@
 //            'art' (the cover with its illustration, for projects without images yet), 'note' (a short status message)
 //   intro    where the title and text sit on a full-screen page: 'after-hero' or 'end'
 const cv0='<svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice">';
-const img=(src,alt)=>'<img src="'+src+'" alt="'+alt+'">';
+const img=(src,alt)=>'<img loading="lazy" decoding="async" src="'+src+'" alt="'+alt+'">';
 const frames=(dir,nums,alt,ratio)=>nums.map(n=>({src:'assets/'+dir+n+'.webp',alt:alt+' '+n,ratio:typeof ratio=='function'?ratio(n):ratio}));
 const seq=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
 
@@ -21,7 +21,7 @@ const PROJECTS=[
   sections:[{kind:'slides',stack:true,images:frames('bhm/',seq(1,18),'BHM mess management app, frame','16/9')}]},
 
  {slug:'tedx',skill:'Events &amp; graphic design',title:'TEDxIIT Delhi',tags:'Events · Graphic design',rail:'TEDx',group:'b',accent:'#EB0028',icon:'bulb',
-  cover:'<img src="assets/tedx/banner.webp" alt="TEDxIIT Delhi event banner" style="object-position:50% 50%">',
+  cover:'<img loading="lazy" decoding="async" src="assets/tedx/banner.webp" alt="TEDxIIT Delhi event banner" style="object-position:50% 50%">',
   lead:'TEDx IIT Delhi is a platform where technology, society and innovation converge to empower minds and inspire change.',
   more:['We bring together visionaries, industry leaders and changemakers to share ideas that drive meaningful impact, and to spark conversations that bridge technological advancement and societal progress.'],
   meta:[['SECTIONS','Film · Campaign · Speakers · Merchandise · Team']],intro:'after-hero',dark:'#000',
@@ -66,7 +66,7 @@ const PROJECTS=[
   lead:'Visual design for BECon’24, the flagship Business and Entrepreneurship Conclave of IIT Delhi.',
   more:['The conclave brings together visionaries, innovators and industry leaders to celebrate the spirit of entrepreneurship, and gives aspiring founders a place to connect, learn and turn ideas into reality.'],
   meta:[['SECTIONS','Film · On stage · Posts']],intro:'after-hero',dark:'#02263c',
-  sections:[{kind:'film',src:'assets/becon24/becon24.mp4'},
+  sections:[{kind:'film',src:'assets/becon24/becon24.mp4',poster:'assets/becon24/post-4.webp'},
    {kind:'quote',text:'A place to connect, learn and turn ideas into reality.'},
    {title:'On stage',kind:'slides',images:[{src:'assets/becon24/post-4.webp',alt:'Panel discussion on stage at BECon 2024',ratio:'3/2'}]},
    {title:'Posts',count:'5 FRAMES',kind:'wall',ratio:'1/1',images:frames('becon24/post-',[1,2,3,5,6],'BECon’24 post')}]}

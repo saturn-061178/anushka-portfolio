@@ -7,7 +7,7 @@ const PHONE={intl:'+91XXXXXXXXXX',show:'+91 XXXXX XXXXX'}; // EDIT: put your num
  addEventListener('pointermove',e=>{mx0=e.clientX;my0=e.clientY});
  new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){if(t0===null)t0=performance.now()}else t0=null}),{threshold:.3}).observe(port);
  const cl=(v)=>Math.max(-1,Math.min(1,v));
- (function lp(){requestAnimationFrame(lp);const r=port.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
+ (function lp(){requestAnimationFrame(lp);if(held())return;const r=port.getBoundingClientRect();if(r.bottom<0||r.top>innerHeight)return;
   const ip=t0===null?0:Math.min(1,(performance.now()-t0)/3400);
   const pr=ez(seg(ip,0,.5));pl.style.setProperty('--w',(pr*125-12)+'%');const sc=ez(seg(ip,.35,1));pc.style.clipPath=`inset(0 0 ${(1-sc)*100}% 0)`;pl.style.opacity=1-.55*sc;
   eL.style.opacity=eR.style.opacity=sc>.34?1:0;sc2.style.top=sc*100+'%';sc2.style.opacity=(sc>0&&sc<1)?1:0;sc2.firstChild.textContent='SCAN '+Math.round(sc*100)+'%';

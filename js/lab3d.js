@@ -31,7 +31,7 @@ function init3D(){
  new ResizeObserver(size).observe(wrap);size();
  new IntersectionObserver(es=>es.forEach(en=>{visible=en.isIntersecting;if(visible&&dstart===0)dstart=0})).observe($('#lab'));
  const labEl=$('#lab'),info=$('#pinfo');let lastName='';
- (function loop(now){requestAnimationFrame(loop);if(!visible)return;
+ (function loop(now){requestAnimationFrame(loop);if(!visible||held())return;
   const r=labEl.getBoundingClientRect(),prog=Math.min(1,Math.max(0,-r.top/(labEl.offsetHeight-innerHeight)));
   if(dstart===0)dstart=now;let target=ez(seg(prog,.1,.55));const dt2=(now-dstart)/4200;if(manual!==null&&now-manualT<6000)target=manual;else if(dt2<1)target=Math.max(target,.95*Math.sin(Math.PI*Math.min(1,dt2)));e+=(target-e)*.12;if(!(manual!==null&&now-manualT<6000)){xs.value=Math.round(e*100)}xv.textContent=Math.round(e*100)+'%';
   const auto=(now-t0)/1000;if(!drag){ry+=vy;vy*=.94;ry+=Math.sin(auto*.5)*.0012}
@@ -45,4 +45,4 @@ function init3D(){
   layers.forEach((p,i)=>{v3.copy(p.userData.anchor);p.localToWorld(v3);v3.project(cam);const x=(v3.x*.5+.5)*w,y=(-v3.y*.5+.5)*h;tagEls[i].style.transform=`translate(${Math.min(x,w-120)}px,${y-7}px)`;tagEls[i].style.opacity=Math.min(1,Math.max(0,(e-.18)*3))*(p===hp?1:.78)});
   ren.render(scene,cam)})(performance.now());
 }
-(function(){let done=false;const go=()=>{if(done)return;done=true;io3.disconnect();if(window.THREE)init3D();else{let n=0;const t=setInterval(()=>{if(window.THREE||++n>40){clearInterval(t);init3D()}},250)}};const io3=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)go()}),{rootMargin:'1200px'});io3.observe($('#lab'))})();
+(function(){let done=false;const go=()=>{if(done)return;done=true;io3.disconnect();if(window.THREE)init3D();else{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';document.head.appendChild(s);let n=0;const t=setInterval(()=>{if(window.THREE||++n>40){clearInterval(t);init3D()}},250)}};const io3=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)go()}),{rootMargin:'1200px'});io3.observe($('#lab'))})();

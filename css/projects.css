@@ -53,7 +53,9 @@
 @media(min-width:801px) and (max-aspect-ratio:16/9){
  .gsl.stk:not(.grid) .gi{position:sticky;top:max(0px,calc((100vh - 56.25vw)/2));box-shadow:0 -30px 70px #0007}
  /* the deck: a covered frame sinks back and dims while the next slides over it. No fade, no gaps. */
- .mo-on .gsl.stk:not(.grid) .gi,.mo-on .gsl.stk:not(.grid) .gi.in{opacity:1;transform:scale(calc(1 - var(--k,0)*.07));transform-origin:50% 0;filter:brightness(calc(1 - var(--k,0)*.5));transition:none}
+ .mo-on .gsl.stk:not(.grid) .gi,.mo-on .gsl.stk:not(.grid) .gi.in{opacity:1;transform:scale(calc(1 - var(--k,0)*.07));transform-origin:50% 0;transition:none}
+ /* dimming is a plain overlay: a filter would make the browser repaint each whole frame */
+ .mo-on .gsl.stk:not(.grid) .gi::after{content:"";position:absolute;inset:0;background:#000;opacity:calc(var(--k,0)*.5);pointer-events:none}
  .mo-on .gsl.stk:not(.grid) .gi img{transform:none;transition:none}
 }
 
@@ -98,6 +100,10 @@
 .gw .gi{aspect-ratio:var(--ar,1/1);border-radius:6px;box-shadow:0 22px 50px #0007;rotate:-2deg;transition:rotate .5s var(--ease),scale .5s var(--ease)}
 .gw .gi:nth-child(even){margin-top:22%;rotate:2.500deg}
 .gw .gi:hover{rotate:0deg;scale:1.05;z-index:2}
+
+/* film waiting for a tap (slow connection) */
+.gv.hold::after{content:"▶  PLAY FILM";position:absolute;left:50%;top:50%;translate:-50% -50%;padding:14px 22px;border-radius:99px;background:#F8F5F0;color:#34201C;font:500 12px 'IBM Plex Mono',monospace;letter-spacing:.12em}
+.gv.hold.rot::after{rotate:0deg}
 
 /* ---- scroll cue on the first screen ---- */
 .pjs{position:relative}

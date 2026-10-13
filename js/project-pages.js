@@ -2,6 +2,7 @@
 // Styles and motion live in css/projects.css.
 
 // ---- markup ----
+function slowNet(){const c=navigator.connection;return !!c&&(c.saveData||/2g|3g/.test(c.effectiveType||''))}
 // a project with no `sections` yet still gets a page: its cover, its illustration and a short note
 const PJ_DEFAULT=[{kind:'art'},{kind:'note',title:'Full write-up coming soon',text:'The complete case study for this project is being written and will be added here.'}];
 function pjSecs(p){return p.sections||PJ_DEFAULT}
@@ -18,7 +19,7 @@ function pjSections(p){let n=0,h=0;
  return pjSecs(p).map(s=>{
   const head=s.title&&s.kind!='note'?'<div class="gh"><span class="mo">'+String(++h).padStart(2,'0')+'</span><h2>'+s.title+'</h2>'+(s.count?'<small class="mo">'+s.count+'</small>':'')+'</div>':'';
   let body;
-  if(s.kind=='film')body='<div class="gv'+(s.sideways?' rot':'')+'"><video muted loop playsinline preload="metadata" src="'+s.src+'"></video><button class="gvb mo" type="button" aria-pressed="false">SOUND OFF</button></div>';
+  if(s.kind=='film')body='<div class="gv'+(s.sideways?' rot':'')+'"><video muted loop playsinline preload="none"'+(s.poster?' poster="'+s.poster+'"':'')+' src="'+s.src+'"></video><button class="gvb mo" type="button" aria-pressed="false">SOUND OFF</button></div>';
   else if(s.kind=='art')body='<div class="ga"><div class="ga-cov">'+p.cover+'</div>'+(ILLUS[p.slug]?'<div class="ga-ill">'+ILLUS[p.slug]+'</div>':'')+'</div>';
   else if(s.kind=='note')body='<div class="gn"><span class="mo gn-k">'+(p.status||'COMING SOON')+'</span><h2>'+s.title+'</h2><p>'+s.text+'</p><a class="mo gn-a" href="#contact">ASK ME ABOUT IT →</a></div>';
   else if(s.kind=='quote')body='<blockquote class="gq"><p>'+s.text.split(' ').map((w,k)=>'<span class="w"><span style="--i:'+k+'">'+w+'</span></span>').join(' ')+'</p></blockquote>';
@@ -71,8 +72,8 @@ function pjPlay(){if(playT){pjStop();return}const d=pjDeck();if(!d)return;if(d.c
 ['wheel','touchstart','keydown'].forEach(t=>addEventListener(t,()=>{if(playT)pjStop()},{passive:true}));
 pageEl.addEventListener('click',e=>{
  const c=e.target.closest('.pjctl button');if(c){if(c.dataset.view)pjView(c.dataset.view);else if('play' in c.dataset)pjPlay();else if('motion' in c.dataset)setMotion(still());return}
- const snd=e.target.closest('.gvb');if(snd){const v=snd.parentNode.querySelector('video');v.muted=!v.muted;if(v.paused)v.play();snd.textContent=v.muted?'SOUND OFF':'SOUND ON';snd.setAttribute('aria-pressed',String(!v.muted));return}
- const film=e.target.closest('.gv');if(film){const v=film.querySelector('video');v.paused?v.play():v.pause();return}
+ const snd=e.target.closest('.gvb');if(snd){const v=snd.parentNode.querySelector('video');snd.parentNode.classList.remove('hold');snd.parentNode.dataset.go=1;v.muted=!v.muted;if(v.paused)v.play();snd.textContent=v.muted?'SOUND OFF':'SOUND ON';snd.setAttribute('aria-pressed',String(!v.muted));return}
+ const film=e.target.closest('.gv');if(film){const v=film.querySelector('video');film.classList.remove('hold');film.dataset.go=1;v.paused?v.play():v.pause();return}
  const b=e.target.closest('.gi');if(b){gList=[...pageEl.querySelectorAll('.gi:not(.cl) img')];gCur=+b.dataset.i;gShow()}});
 pageEl.addEventListener('pointermove',e=>{const g=e.target.closest('.gg .gi,.gw .gi');if(!g)return;const r=g.getBoundingClientRect();g.style.setProperty('--tx',((e.clientX-r.left)/r.width-.5).toFixed(2));g.style.setProperty('--ty',((e.clientY-r.top)/r.height-.5).toFixed(2))});
 pageEl.addEventListener('scroll',()=>{const b=pageEl.querySelector('.pjbar');if(!b)return;b.style.setProperty('--p',(pageEl.scrollTop/Math.max(1,pageEl.scrollHeight-pageEl.clientHeight)).toFixed(4));
@@ -80,7 +81,7 @@ pageEl.addEventListener('scroll',()=>{const b=pageEl.querySelector('.pjbar');if(
  // Each pinned frame also learns how far the next one has slid over it (--k, 0 to 1) so it can sink back.
  const hud=pageEl.querySelector('.pjhud');if(!hud)return;const fr=[...pageEl.querySelectorAll('.gsl.stk .gi')],mid=innerHeight/2;let k=-1;
  const rc=fr.map(f=>f.getBoundingClientRect());
- fr.forEach((f,i)=>{const r=rc[i];if(r.top<=mid&&r.bottom>=mid)k=i;const n=rc[i+1];f.style.setProperty('--k',n?Math.max(0,Math.min(1,(r.bottom-n.top)/r.height)).toFixed(3):'0')});
+ fr.forEach((f,i)=>{const r=rc[i];if(r.top<=mid&&r.bottom>=mid)k=i;const n=rc[i+1];const kv=n?Math.max(0,Math.min(1,(r.bottom-n.top)/r.height)).toFixed(2):'0';if(f._k!==kv){f._k=kv;f.style.setProperty('--k',kv)}});
  hud.classList.toggle('on',k>-1);if(k>-1)hud.firstChild.textContent=String(k+1).padStart(2,'0')},{passive:true});
 // ← / → step through the cases
 addEventListener('keydown',e=>{if(e.key!='ArrowLeft'&&e.key!='ArrowRight')return;if(glb.classList.contains('on')||$('#lb').classList.contains('on')||e.altKey||e.ctrlKey||e.metaKey)return;
@@ -90,7 +91,9 @@ let pjSeen=null,pjFilms=null,pjTimer=0;
 function pjWatch(){
  if(pjSeen)pjSeen.disconnect();if(pjFilms)pjFilms.disconnect();clearTimeout(pjTimer);
  // films only play while they are on screen
- pjFilms=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('video');if(e.isIntersecting)v.play().catch(()=>{});else v.pause()}),{root:pageEl,threshold:.25});
+ pjFilms=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target.querySelector('video');if(!e.isIntersecting){v.pause();return}
+  // on a slow or data-saving connection the film waits for a tap instead of downloading by itself
+  if(slowNet()&&!e.target.dataset.go){e.target.classList.add('hold');return}v.play().catch(()=>{})}),{root:pageEl,threshold:.25});
  pageEl.querySelectorAll('.gv').forEach(e=>pjFilms.observe(e));
  if(still())return;
  pageEl.classList.add('mo-on');

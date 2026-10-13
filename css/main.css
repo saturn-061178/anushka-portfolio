@@ -636,3 +636,6 @@ nav a:hover{color:var(--esp)}nav a.on,nav a.hv{color:#fff}nav.hovering a.on:not(
 
 /* ===== v30: glitter instead of coloured water ===== */
 #flh,#flc{mix-blend-mode:normal;filter:none;opacity:1}
+
+/* while a full-screen page covers the home page, its always-on overlays are switched off */
+body.pgheld #grain,body.pgheld #vig,body.pgheld #trail{display:none}

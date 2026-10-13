@@ -1,4 +1,6 @@
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+// true while the home page is covered by a full-screen page, or the tab is hidden: its animation loops skip work
+const held=()=>document.hidden||document.body.classList.contains('pgheld');
 const seg=(p,a,b)=>Math.min(1,Math.max(0,(p-a)/(b-a))),ez=t=>t*t*(3-2*t);
 // sketch library
 function gear(){let d='';for(let i=0;i<24;i++){const a=i/24*Math.PI*2,r=i%2?30:40;d+=(i?'L':'M')+(50+r*Math.cos(a)).toFixed(1)+' '+(55+r*Math.sin(a)).toFixed(1)}return d+'ZM62 55a12 12 0 1 0-24 0a12 12 0 1 0 24 0'}

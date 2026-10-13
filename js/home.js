@@ -22,6 +22,7 @@ const obs=$$('.ob'),leads=$$('#lead line'),cap3t=$('#cap3t'),capd=$$('#cap3 i'),
 [tang,clean].forEach(e=>{e.style.strokeDasharray=1;e.style.strokeDashoffset=1});
 $$('#fig .ln').forEach(p=>{p.setAttribute('pathLength',1);p.style.strokeDasharray=1;p.style.strokeDashoffset=1});const lns=$$('#fig .ln');
 function frame(){
+  if(held()){requestAnimationFrame(frame);return}
   if(Math.abs(target-cur)>.3){cur+=(target-cur)*.085;scrollTo(0,cur)}
   document.documentElement.style.setProperty('--sk',(Math.max(-1,Math.min(1,(target-cur)/500))*-2.5).toFixed(2)+'deg');
   const vh=innerHeight,y=cur,q=Math.min(1,Math.max(0,y/(hero.offsetHeight-vh)))||0;
@@ -70,7 +71,7 @@ links.forEach(a=>a.onclick=e=>{if(a.getAttribute('href').startsWith('#/'))return
 $('#sc').onclick=()=>{const t=$('#toast');t.textContent='The portfolio was supposed to be normal. Then I started overthinking it.';t.classList.add('on');setTimeout(()=>t.classList.remove('on'),4200)};
 // corner room
 const PH={"p1":"assets/site/img-07.webp","p2":"assets/site/img-08.webp","p3":"assets/site/img-09.webp","p4":"assets/site/img-10.webp","p5":"assets/site/img-11.webp","p6":"assets/site/img-12.webp","p7":"assets/site/img-13.webp","p8":"assets/site/img-14.webp","p9":"assets/site/img-15.webp","p10":"assets/site/img-16.webp","p11":"assets/site/img-17.webp","p12":"assets/site/img-18.webp","p13":"assets/site/img-19.webp","p14":"assets/site/img-20.webp","p15":"assets/site/img-21.webp","p16":"assets/site/img-22.webp","l_tech":"assets/site/img-23.webp","l_type":"assets/site/img-24.webp","l_ui":"assets/site/img-25.webp","l_cat":"assets/site/img-26.webp","me":"assets/site/img-27.webp","line":"assets/site/img-28.webp","contact": "assets/site/img-29.jpg", "i1": "assets/site/img-30.jpg", "i2": "assets/site/img-31.jpg", "i3": "assets/site/img-32.jpg", "para": "assets/site/img-33.jpg", "edu": "assets/site/img-34.jpg"};
-$$('[data-k]').forEach(i=>i.src=PH[i.dataset.k]);
+$$('[data-k]').forEach(i=>{i.loading='lazy';i.decoding='async';i.src=PH[i.dataset.k]});
 const board=$('#board'),cnct=$('#cnct'),dragme=$('#dragme');let zz=30;
 // ---- corner: filterable scrapbook wall ----
 const CORNER=[['p1','SAREE DAY','people'],['contact','SNOW DAY','travel'],['p5','SEA, LATE AFTERNOON','beach travel'],['p11','MUMBAI · AFTER THE RAIN','mumbai'],['p4','THE ORANGE WALL','people'],['p14','SKY & STONE','mumbai'],['i2','HILLS > EVERYTHING','travel'],['p9','GOLDEN, AFTER DARK','nights people'],['p6','COCONUTS, SUNGLASSES ON','beach'],['p2','RED CURTAIN','people'],['i1','COSY CORNERS','people'],['p10','UNDER THE LIGHTS','nights'],['p12','MUMBAI · CROSSROADS','mumbai'],['para','UP, UP, UP','travel'],['p7','SIGNED IN SAND','beach'],['p3','IN THE SUN','people'],['p8','SPARKLE, AFTER DARK','nights people'],['i3','COLOUR, ALWAYS','people'],['p15','LOOKING UP','mumbai'],['p16','DINNER, MID-LAUGH','nights people'],['p13','PAY & PARK','mumbai'],['edu','TEDxIIT DELHI','people']];
