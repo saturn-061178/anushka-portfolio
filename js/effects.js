@@ -33,7 +33,7 @@ function spark(g,x,y,r,c,a,star){g.globalAlpha=a;g.fillStyle=c;if(!star){g.begin
   if(Math.hypot(e.clientX-lsx,e.clientY-lsy)>60){lsx=e.clientX;lsy=e.clientY;for(let k=0;k<1;k++){if(o.tr.length<12)o.tr.push({x:x+(Math.random()-.5)*.02,y:y+(Math.random()-.5)*.03,vx:(Math.random()-.5)*.002,vy:-.0006-Math.random()*.0012,r:1.2+Math.random()*2.2,life:.9,max:.9,c:o.cols[(Math.random()*o.cols.length)|0],ph:Math.random()*6.28})}}}
  addEventListener('pointermove',e=>{if(H&&H.vis)onMove(H,e);if(C&&C.vis)onMove(C,e);lx=e.clientX;ly=e.clientY});
  let last=performance.now(),acc=0,tick=0;
- (function loop(now){requestAnimationFrame(loop);if(pageHeld()){last=now;return}const dt=Math.min(.05,(now-last)/1000);last=now;acc+=dt;if(acc<.015)return;const d=acc;acc=0;tick++;const t=now/1000;
+ (function loop(now){requestAnimationFrame(loop);if(pageHeld()){last=now;return}const dt=Math.min(.05,(now-last)/1000);last=now;acc+=dt;if(acc<(small?.032:.015))return;/* phones: about 30 frames a second */const d=acc;acc=0;tick++;const t=now/1000;
   [H,C].forEach(o=>{if(!o||!o.vis||!o.W)return;const fl=o.fl,g=o.g,W=o.W,Hh=o.H;
    if(tick%140==0)fl.splat(Math.random(),Math.random(),(Math.random()-.5)*14,(Math.random()-.5)*10,0,.1);
    fl.step(1/60);
