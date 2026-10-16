@@ -204,3 +204,5 @@
  .pgnext b{display:inline-block;transition:transform .6s var(--ease)}
  .pgnext:hover b{transform:translateX(22px)}
 }
+/* phones: Share and Motion show just their icons so the control bar fits */
+@media(max-width:600px){.pjctl [data-share]{font-size:0;padding:9px 12px}.pjctl [data-share]::after{content:"↗";font-size:14px}.pjctl-m{font-size:0;padding:9px 10px;gap:0}}

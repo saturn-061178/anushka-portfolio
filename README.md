@@ -71,4 +71,5 @@ use names defined by earlier ones, so keep that order.
 
 - AmulAI shows a short page marked "full write-up coming soon"; Indocables is marked "in progress".
 - `assets/becon24/becon24.mp4` is 47 MB and should be compressed before heavy traffic.
-- No social preview image (`og:image`) is set; add one once the site has a public URL.
+- `og-image.jpg` is the link preview (1200×630) shown on WhatsApp, LinkedIn etc. If the site moves to a new address,
+  update the URLs in the `og:`/`twitter:`/canonical tags and the JSON-LD block at the top of `index.html`.

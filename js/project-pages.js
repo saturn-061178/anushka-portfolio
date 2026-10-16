@@ -36,7 +36,11 @@ function pjFrames(p){return pjSecs(p).filter(s=>s.kind=='slides'&&s.stack).reduc
 function pjControls(p){const deck=p&&pjFrames(p)>3;
  return '<div class="pjctl mo" role="toolbar" aria-label="Page controls">'
   +(deck?'<span class="pjctl-g" data-on="story"><b class="pjctl-t"></b><button type="button" data-view="story" aria-pressed="true">STORY</button><button type="button" data-view="grid" aria-pressed="false">GRID</button></span><button type="button" class="pjctl-b" data-play aria-pressed="false">▶ PLAY</button>':'')
-  +'<button type="button" class="pjctl-b pjctl-m" data-motion aria-pressed="'+!still()+'"><i></i>MOTION '+(still()?'OFF':'ON')+'</button></div>'}
+  +(p?'<button type="button" class="pjctl-b" data-share aria-label="Share this project">SHARE ↗</button>':'')+'<button type="button" class="pjctl-b pjctl-m" data-motion aria-pressed="'+!still()+'"><i></i>MOTION '+(still()?'OFF':'ON')+'</button></div>'}
+// share: the phone's share sheet where there is one, otherwise copy the link
+function pjShare(btn){const url=location.href,title=document.title,note=t=>{const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(note.t);note.t=setTimeout(()=>el.classList.remove('on'),2200)};
+ if(navigator.share&&matchMedia('(pointer:coarse)').matches){navigator.share({title,url}).catch(()=>{});return}
+ (navigator.clipboard?navigator.clipboard.writeText(url):Promise.reject()).then(()=>{note('Link copied');btn.textContent='COPIED ✓';setTimeout(()=>{btn.textContent='SHARE ↗'},1800)}).catch(()=>note(url))}
 // three more projects to jump to, after the one the "next case" band already offers
 function pjMore(i){const n=P.length;return '<section class="pjx"><div class="gh"><span class="mo">+</span><h2>keep exploring</h2><small class="mo"><a href="#/work">ALL PROJECTS →</a></small></div><div class="pjx-r">'
   +[2,3,4].map(k=>(i+k)%n).filter((j,k,a)=>j!=i&&a.indexOf(j)==k).map(j=>'<a class="pjx-c" href="#/case/'+CASES[j]+'" data-cur="OPEN CASE" style="--ac:'+(PROJECTS[j].accent||'#FF2D55')+'"><div class="pjx-v">'+P[j][2]+'</div><span class="mo">'+String(j+1).padStart(2,'0')+'</span><h3>'+P[j][0]+'</h3><p class="mo">'+P[j][1]+'</p></a>').join('')+'</div></section>'}
@@ -71,7 +75,7 @@ function pjPlay(){if(playT){pjStop();return}const d=pjDeck();if(!d)return;if(d.c
  const step=()=>{const k=pjCurrent();if(k>=n-1){pjStop();return}pageEl.scrollTo({top:pjFrameTop(k+1),behavior:still()?'auto':'smooth'})};step();playT=setInterval(step,2800)}
 ['wheel','touchstart','keydown'].forEach(t=>addEventListener(t,()=>{if(playT)pjStop()},{passive:true}));
 pageEl.addEventListener('click',e=>{
- const c=e.target.closest('.pjctl button');if(c){if(c.dataset.view)pjView(c.dataset.view);else if('play' in c.dataset)pjPlay();else if('motion' in c.dataset)setMotion(still());return}
+ const c=e.target.closest('.pjctl button');if(c){if(c.dataset.view)pjView(c.dataset.view);else if('play' in c.dataset)pjPlay();else if('motion' in c.dataset)setMotion(still());else if('share' in c.dataset)pjShare(c);return}
  const snd=e.target.closest('.gvb');if(snd){const v=snd.parentNode.querySelector('video');snd.parentNode.classList.remove('hold');snd.parentNode.dataset.go=1;v.muted=!v.muted;if(v.paused)v.play();snd.textContent=v.muted?'SOUND OFF':'SOUND ON';snd.setAttribute('aria-pressed',String(!v.muted));return}
  const film=e.target.closest('.gv');if(film){const v=film.querySelector('video');film.classList.remove('hold');film.dataset.go=1;v.paused?v.play():v.pause();return}
  const b=e.target.closest('.gi');if(b){gList=[...pageEl.querySelectorAll('.gi:not(.cl) img')];gCur=+b.dataset.i;gShow()}});
