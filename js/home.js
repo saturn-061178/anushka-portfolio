@@ -17,7 +17,7 @@ if(!matchMedia('(prefers-reduced-motion:reduce)').matches&&!matchMedia('(pointer
 addEventListener('scroll',()=>{if(Math.abs(scrollY-cur)>3){target=cur=scrollY}},{passive:true});
 const tg=$('#tg'),tech=$('#tech'),it0={v:0},irL=$('#irL'),irR=$('#irR');let mxp=0,myp=0;
 addEventListener('pointermove',e=>{mxp=e.clientX;myp=e.clientY});
-const obs=$$('.ob'),leads=$$('#lead line'),cap3t=$('#cap3t'),capd=$$('#cap3 i'),tang=$('#tang'),clean=$('#clean'),scrR=$('#scr'),scanE=$('.scan'),bnE=$('#bn'),supE=$('.sup');let capk=-1,wk=-1;const ldn=$('#ldn'),ldc=$('#ldc'),ldt=$('#ldt'),lds=$('#lds');const dmf=$('.dm-f');let T00=performance.now();
+const obs=$$('.ob'),leads=$$('#lead line'),cap3t=$('#cap3t'),capd=$$('#cap3 i'),tang=$('#tang'),clean=$('#clean'),scrR=$('#scr'),scanE=$('.scan'),bnE=$('#bn'),supE=$('.sup');let capk=-1,wk=-1;const ldn=$('#ldn'),ldc=$('#ldc'),ldt=$('#ldt'),lds=$('#lds');const dmf=$('.dm-f');let T00=performance.now()-(document.documentElement.classList.contains('quick')?2800:0); // returning visitors start most of the way through the intro
 (function(){let d='M300 300',a=0;for(let i=0;i<26;i++){a+=2.1+Math.random();const r=70+Math.random()*190;d+=`C${300+Math.cos(a-.6)*r*1.3} ${300+Math.sin(a-.6)*r*1.3} ${300+Math.cos(a)*r*.5} ${300+Math.sin(a)*r*1.5} ${300+Math.cos(a+.5)*r} ${300+Math.sin(a+.5)*r}`}tang.setAttribute('d',d)})();
 [tang,clean].forEach(e=>{e.style.strokeDasharray=1;e.style.strokeDashoffset=1});
 $$('#fig .ln').forEach(p=>{p.setAttribute('pathLength',1);p.style.strokeDasharray=1;p.style.strokeDashoffset=1});const lns=$$('#fig .ln');
@@ -116,8 +116,8 @@ const rp0=$('#rpath'),rdot=$('#rdot'),rlen=rp0.getTotalLength(),rst=[];
 (function rt(){const r=$('#contact').getBoundingClientRect(),pr=Math.min(1,Math.max(0,(innerHeight-r.top)/(innerHeight*.95)));const p=rp0.getPointAtLength(rlen*pr);rdot.setAttribute('cx',p.x);rdot.setAttribute('cy',p.y);rst.forEach(([c,t],i)=>{const on=pr>=i/4-.02;c.style.opacity=on?1:.25;t.style.opacity=on?.95:.3});requestAnimationFrame(rt)})();
 // ---- loader (runs on load, and again on 'Replay intro') ----
 function runLoader(){const t0=performance.now(),p=$('#pct'),l=$('#lb2');(function r(){const k=Math.min(1,(performance.now()-t0)/1400);if(p){p.textContent='LOADING '+String(Math.round(k*100)).padStart(3,'0')+'%';l.style.width=k*100+'%'}if(k<1)requestAnimationFrame(r);else if(p)p.textContent='READY'})()}
-function replayIntro(){$$('.bar,#card').forEach(n=>n.replaceWith(n.cloneNode(true)));T00=performance.now();runLoader();setTimeout(()=>scr($('.tag')),1900)}
-runLoader();
+function replayIntro(){document.documentElement.classList.remove('quick');$$('.bar,#card').forEach(n=>n.replaceWith(n.cloneNode(true)));T00=performance.now();runLoader();setTimeout(()=>scr($('.tag')),1900)}
+runLoader();setTimeout(()=>{try{localStorage.setItem('introSeen',Date.now())}catch(e){}},3500);
 $('#replay').addEventListener('click',e=>{e.preventDefault();target=0;setTimeout(replayIntro,1300)});
 $$('nav a').forEach(a=>{if(a.getAttribute('href')=='#top')a.addEventListener('click',()=>{if(scrollY<80)replayIntro()})});
 // ---- extra motion ----

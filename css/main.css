@@ -685,3 +685,6 @@ body.pgheld #grain,body.pgheld #vig,body.pgheld #trail{display:none}
 .cgift{width:44px}
 .cbox.gone,.cgift.gone{opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s}
 @keyframes cpop{from{transform:scale(.4) translateY(20px);opacity:0}}
+
+/* returning visitors: no curtain or title card (see the script at the top of index.html) */
+.quick .bar,.quick #card{display:none}
