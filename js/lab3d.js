@@ -31,7 +31,7 @@ function init3D(){
  new ResizeObserver(size).observe(wrap);size();
  new IntersectionObserver(es=>es.forEach(en=>{visible=en.isIntersecting;if(visible&&dstart===0)dstart=0})).observe($('#lab'));
  const labEl=$('#lab'),info=$('#pinfo');let lastName='';
- (function loop(now){requestAnimationFrame(loop);if(!visible||held())return;
+ (function loop(now){requestAnimationFrame(loop);if(!visible||pageHeld())return;
   const r=labEl.getBoundingClientRect(),prog=Math.min(1,Math.max(0,-r.top/(labEl.offsetHeight-innerHeight)));
   if(dstart===0)dstart=now;let target=ez(seg(prog,.1,.55));const dt2=(now-dstart)/4200;if(manual!==null&&now-manualT<6000)target=manual;else if(dt2<1)target=Math.max(target,.95*Math.sin(Math.PI*Math.min(1,dt2)));e+=(target-e)*.12;if(!(manual!==null&&now-manualT<6000)){xs.value=Math.round(e*100)}xv.textContent=Math.round(e*100)+'%';
   const auto=(now-t0)/1000;if(!drag){ry+=vy;vy*=.94;ry+=Math.sin(auto*.5)*.0012}

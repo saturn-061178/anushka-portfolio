@@ -18,7 +18,7 @@
  function setShape(i){si=(i+SH.length)%SH.length;lastAuto=performance.now();lastEq=0}
  cv.addEventListener('click',()=>setShape(si+1));
  const PINK='#FF2D55';
- function frame(now){requestAnimationFrame(frame);if(!vis||!W||held())return;
+ function frame(now){requestAnimationFrame(frame);if(!vis||!W||pageHeld())return;
   if(now-lastAuto>7000)setShape(si+1);
   const t=(now-t0)/1000,sh=SH[si],ph=((t*.22)%2),dd=sh.dyn?sample(sh,ph*PI):sh.pts;
   for(let i=0;i<N*2;i++)cur[i]+=(dd[i]-cur[i])*.085;

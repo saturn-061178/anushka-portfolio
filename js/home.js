@@ -22,7 +22,7 @@ const obs=$$('.ob'),leads=$$('#lead line'),cap3t=$('#cap3t'),capd=$$('#cap3 i'),
 [tang,clean].forEach(e=>{e.style.strokeDasharray=1;e.style.strokeDashoffset=1});
 $$('#fig .ln').forEach(p=>{p.setAttribute('pathLength',1);p.style.strokeDasharray=1;p.style.strokeDashoffset=1});const lns=$$('#fig .ln');
 function frame(){
-  if(held()){requestAnimationFrame(frame);return}
+  if(pageHeld()){requestAnimationFrame(frame);return}
   if(Math.abs(target-cur)>.3){cur+=(target-cur)*.085;scrollTo(0,cur)}
   document.documentElement.style.setProperty('--sk',(Math.max(-1,Math.min(1,(target-cur)/500))*-2.5).toFixed(2)+'deg');
   const vh=innerHeight,y=cur,q=Math.min(1,Math.max(0,y/(hero.offsetHeight-vh)))||0;
