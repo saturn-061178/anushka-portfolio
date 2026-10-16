@@ -709,3 +709,9 @@ body.pgheld #grain,body.pgheld #vig,body.pgheld #trail{display:none}
 nav{top:calc(var(--tbh) + 10px + env(safe-area-inset-top,0px))}
 #page{top:calc(var(--tbh) + env(safe-area-inset-top,0px))}
 @media(max-width:600px){:root{--tbh:28px}.topbar{font-size:10.5px;letter-spacing:.04em}.tb-k{display:none}}
+/* sassy cat */
+#cat[data-a=eyeroll] [id^=ceyes]>*{animation:eroll 1.1s ease-in-out}
+@keyframes eroll{0%,100%{transform:none}30%{transform:translate(-2px,-5px)}65%{transform:translate(2px,-5px)}}
+#cat[data-a=noseup] .chd{animation:noseup 2.2s ease-in-out}
+#cat[data-a=noseup] [id^=ceyes]>*{transform:scaleY(.15)}
+@keyframes noseup{15%,80%{transform:rotate(-10deg) translate(-4px,-5px)}}
