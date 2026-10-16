@@ -26,6 +26,10 @@ cbDlg.innerHTML='<form class="cb-card" id="cb-f" novalidate>'
  +'</form>';
 document.body.appendChild(cbDlg);
 
+// every email link still opens the mail app, and also copies the address
+addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href^="mailto:"]');if(!a||!navigator.clipboard)return;
+ const addr=a.getAttribute('href').slice(7).split('?')[0];navigator.clipboard.writeText(addr).then(()=>toast('Email copied: '+addr,3000)).catch(()=>{})});
+
 const cbForm=cbDlg.querySelector('#cb-f'),cbErr=cbDlg.querySelector('.cb-err'),cbOk=cbDlg.querySelector('.cb-ok');
 function cbOpen(){cbForm.classList.remove('sent','busy');cbOk.hidden=true;cbErr.hidden=true;if(!cbDlg.open)cbDlg.showModal();setTimeout(()=>cbForm.elements.name.focus(),60)}
 function cbClose(){if(cbDlg.open)cbDlg.close()}

@@ -2,6 +2,9 @@
 // Styles and motion live in css/projects.css.
 
 // ---- markup ----
+// Cookstove and Bhilwa are long case studies kept in js/data/case-studies-data.js, which is fetched only when needed
+const CS_SLUGS=['cookstove','bhilwa'];
+function csLoad(done){if(csLoad.s){csLoad.s.addEventListener('load',done);return}const s=csLoad.s=document.createElement('script');s.src='js/data/case-studies-data.js?v='+(BUILD_V||'');s.onload=done;document.head.appendChild(s)}
 function slowNet(){const c=navigator.connection;return !!c&&(c.saveData||/2g|3g/.test(c.effectiveType||''))}
 // a project with no `sections` yet still gets a page: its cover, its illustration and a short note
 const PJ_DEFAULT=[{kind:'art'},{kind:'note',title:'Full write-up coming soon',text:'The complete case study for this project is being written and will be added here.'}];
@@ -54,10 +57,15 @@ function pjHTML(p,i){const nx=(i+1)%P.length,pv=(i+P.length-1)%P.length,secs=pjS
 // ---- image viewer (click any frame) ----
 const glb=document.createElement('div');glb.id='glb';glb.innerHTML='<button class="lbn prev" type="button" aria-label="Previous image">←</button><img alt=""><button class="lbn next" type="button" aria-label="Next image">→</button><button class="lbx" type="button" aria-label="Close">✕</button><span class="lbc mo"></span>';document.body.appendChild(glb);
 let gList=[],gCur=0;
-function gShow(){if(!gList.length)return;gCur=(gCur+gList.length)%gList.length;const im=glb.querySelector('img');im.style.animation='none';im.src=gList[gCur].src;im.alt=gList[gCur].alt;im.offsetWidth;im.style.animation='';glb.querySelector('.lbc').textContent=String(gCur+1).padStart(2,'0')+' / '+String(gList.length).padStart(2,'0');glb.classList.add('on')}
-glb.addEventListener('click',e=>{if(e.target.closest('.prev')){gCur--;gShow()}else if(e.target.closest('.next')){gCur++;gShow()}else if(e.target.tagName!='IMG')glb.classList.remove('on')});
+function gShow(){if(!gList.length)return;gZoom(false);gCur=(gCur+gList.length)%gList.length;const im=glb.querySelector('img');im.style.animation='none';im.src=gList[gCur].src;im.alt=gList[gCur].alt;im.offsetWidth;im.style.animation='';glb.querySelector('.lbc').textContent=String(gCur+1).padStart(2,'0')+' / '+String(gList.length).padStart(2,'0')+'  ·  CLICK IMAGE TO ZOOM';glb.classList.add('on')}
+// zoom: click the image to look closer; move the pointer (or drag a finger) to look around
+function gAim(x,y){const im=glb.querySelector('img'),r=im.getBoundingClientRect();im.style.transformOrigin=Math.max(0,Math.min(100,(x-r.left)/r.width*100))+'% '+Math.max(0,Math.min(100,(y-r.top)/r.height*100))+'%'}
+function gZoom(on,x,y){glb.classList.toggle('zm',on);if(on)gAim(x,y)}
+glb.addEventListener('click',e=>{if(e.target.closest('.prev')){gCur--;gShow()}else if(e.target.closest('.next')){gCur++;gShow()}else if(e.target.tagName=='IMG')gZoom(!glb.classList.contains('zm'),e.clientX,e.clientY);else glb.classList.remove('on')});
+glb.addEventListener('pointermove',e=>{if(glb.classList.contains('zm')&&e.pointerType!='touch')gAim(e.clientX,e.clientY)});
+glb.addEventListener('touchmove',e=>{if(glb.classList.contains('zm')){const t=e.touches[0];gAim(t.clientX,t.clientY)}},{passive:true});
 addEventListener('keydown',e=>{if(!glb.classList.contains('on'))return;if(e.key=='Escape'){glb.classList.remove('on');e.stopImmediatePropagation()}else if(e.key=='ArrowRight'){gCur++;gShow()}else if(e.key=='ArrowLeft'){gCur--;gShow()}},true);
-let gx0=null;glb.addEventListener('touchstart',e=>{gx0=e.touches[0].clientX},{passive:true});glb.addEventListener('touchend',e=>{if(gx0===null)return;const dx=e.changedTouches[0].clientX-gx0;gx0=null;if(Math.abs(dx)>50){gCur+=dx<0?1:-1;gShow()}},{passive:true});
+let gx0=null;glb.addEventListener('touchstart',e=>{gx0=e.touches[0].clientX},{passive:true});glb.addEventListener('touchend',e=>{if(gx0===null||glb.classList.contains('zm')){gx0=null;return}const dx=e.changedTouches[0].clientX-gx0;gx0=null;if(Math.abs(dx)>50){gCur+=dx<0?1:-1;gShow()}},{passive:true});
 
 // ---- interaction + motion ----
 let playT=0;
@@ -115,7 +123,7 @@ renderWork=function(){pjReset();renderWorkBase()};
 closePg=function(h){pageEl.querySelectorAll('video').forEach(v=>v.pause());closePgBase(h)};
 renderCase=function(i){const p=PROJECTS[i];pjReset();
  if(p.accent)pageEl.style.setProperty('--ac',p.accent);
- if(CS_DATA[p.slug]){renderCaseStudy(i);pageMotion(i);return}
+ if(CS_SLUGS.includes(p.slug)){if(typeof CS_DATA=='undefined'){csLoad(()=>{if(location.hash=='#/case/'+p.slug){renderCase(i);if(typeof cbHeader=='function')cbHeader()}});return}renderCaseStudy(i);pageMotion(i);return}
  pageEl.classList.remove('cs');pageEl.classList.add('full');
  if(p.dark){pageEl.classList.add('dk');pageEl.style.setProperty('--pjbg',p.dark)}
  pageEl.innerHTML=pjHTML(p,i);$('#pgb').onclick=()=>{location.hash='#/work'};pageEl.scrollTop=0;pjWatch();pageMotion(i)};

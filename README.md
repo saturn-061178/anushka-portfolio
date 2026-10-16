@@ -53,7 +53,8 @@ The live site updates a minute or two after the push.
 | `assets/site/` | Images used by the home page and the long case studies |
 
 Scripts are plain `<script>` tags loaded in the order listed in `index.html`; later files
-use names defined by earlier ones, so keep that order.
+use names defined by earlier ones, so keep that order. `js/data/case-studies-data.js` is the exception: it is fetched
+only when Cookstove or Bhilwa is opened. When raising the `?v=` numbers, also raise `BUILD_V` above `core.js`.
 
 ## Common edits
 
