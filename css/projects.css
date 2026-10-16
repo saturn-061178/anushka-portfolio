@@ -219,3 +219,10 @@
 @media(pointer:coarse){.pjjump button{min-height:40px}}
 /* shown while a long case study is fetched */
 .pjload{min-height:70vh;display:grid;place-items:center;letter-spacing:.14em;opacity:.7}
+/* very short screens (a phone turned sideways): give the content the room */
+@media(max-height:480px){
+ :root{--tbh:0px}.topbar{display:none}
+ .pjcue{display:none}
+ .pjctl{bottom:6px;scale:.82;transform-origin:50% 100%}
+ .pjhud{bottom:8px;scale:.85;transform-origin:0 100%}
+}
