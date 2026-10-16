@@ -93,7 +93,10 @@
  ['wheel','keydown','touchstart'].forEach(ev=>addEventListener(ev,act,{passive:true}));
  addEventListener('resize',()=>{if(st=='home'||st=='away'){hx=clampf(hx,8,W()-SZ()-8);x=tx=hx;y=ty=floor()}});
  cat.addEventListener('pointerdown',e=>{held={sx:e.clientX,sy:e.clientY,m:false};try{cat.setPointerCapture(e.pointerId)}catch(_){}wake();lastAct=performance.now()});
- const release=()=>{if(!held)return;const m=held.m;held=null;cat.classList.remove('held');if(m){st='fall';vy=0;return}
+ const release=ev=>{if(!held)return;const m=held.m;held=null;cat.classList.remove('held');if(m){st='fall';vy=0;return}
+   // a quick tap on the cat while it sits over a link or button goes to that link or button instead
+   if(ev&&ev.type=='pointerup'){const under=document.elementsFromPoint(ev.clientX,ev.clientY).find(el=>!el.closest('#cat')),hit=under&&under.closest('a[href],button,input,select,textarea,label,[role=button]');
+    if(hit){if(/^(INPUT|SELECT|TEXTAREA)$/.test(hit.tagName))hit.focus();else hit.click();return}}
    const tn=performance.now();if(tn<sulkUntil){say('…',900);return}
    clicks=clicks.filter(t=>tn-t<6000);clicks.push(tn);if(clicks.length>=4){clicks=[];sulkUntil=tn+10000;cool=tn+15000;setTail('flick',1600);say(rnd(['hmph. touch me again, i dare you.','enough clicking. i’m not a button.','i need space. and tuna.']),1800);
     setTimeout(()=>go(x>W()/2?40:W()-SZ()-40,floor(),'patrol'),700);return}
