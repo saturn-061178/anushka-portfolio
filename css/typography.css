@@ -16,3 +16,14 @@
 @media(max-width:600px){.hmail{font-size:10.5px}}
 /* on very short screens there is no room for the second line in the hero; it stays in the contact section */
 @media(max-height:690px){.hmail+.hmail{display:none}}
+
+/* legibility: small pink/orange labels on the light backgrounds use a deeper ink so they reach
+   4.5:1 contrast; the bright pink stays for large type, buttons and dark sections */
+:root{--pink-ink:#CC0033}
+.vc,.ab .kick,.qtx .qk,.cnct,.ab2 .kick,.abh2 .mo{color:var(--pink-ink)}
+.sup>.mo{color:var(--pink-ink)!important}
+/* on the dark 3D section the pink goes a touch lighter instead */
+.labtxt .kick,.pinfo b{color:#FF6B87}
+.mc p.mo{opacity:.9}
+.mfr{opacity:1}
+#page.full:not(.dk) .pgk{color:color-mix(in srgb,var(--ac,var(--pink)) 70%,#000)}
