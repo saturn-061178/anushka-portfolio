@@ -1,4 +1,7 @@
-// ================= CAT v3: black cat, four moods =================
+// ================= CAT v4: black cat, four moods, real cat habits =================
+// Habits: purrs when stroked (and swats if it goes on too long), slow-blinks when you stay still nearby,
+// stalks and pounces, chatters at fast movement near the top ("birds"), swats at a pointer that comes close,
+// kneads and turns a circle before a nap, grooms after a fall, sometimes ignores you, and sulks if clicked too much.
 (function(){
  const cat=$('#cat'),bub=$('#cbub'),mlab=$('#cmood'),eyeEls=[$('#ceyes'),$('#ceyesD'),$('#ceyesS')];if(!cat)return;
  const W=()=>innerWidth,H=()=>innerHeight,SZ=()=>cat.offsetWidth||150,CH=()=>cat.offsetHeight||150,ph=matchMedia('(max-width:600px)');
@@ -9,15 +12,20 @@
   diva:{label:'DIVA MODE',line:'darling, that kerning… ✦',greet:['darling, you paused. how chic.','i approve of this portfolio ✦','hello, darling.']}};
  const ORDER=['coffee','deadline','shark','diva'],SM={top:'coffee',works:'deadline',leader:'deadline',lab:'deadline',quiet:'diva',apr:'diva',about:'diva',corner:'shark',contact:'coffee'};
  let px2=0,nextAct=performance.now()+6600,actEnd=0,hy=0,hv=0,hopping=false,zw=[],lookUntil=0,mood='coffee',manualUntil=0,lastSec='',hx=W()-SZ()-14,x=W()+120,y=floor(),tx=x,ty=y,st='away',pose='sit',last=performance.now(),lastAct=last,cool=last+3600,visits=0,lastY=scrollY,px=W()*.6,py=H()*.6,pm=false,gs=null,sleeping=false,seen=false,vy=0,held=null,nextPatrol=last+11000+Math.random()*6000,tip={};
+ let pet={d:0,start:0,last:0},purrUntil=0,clicks=[],sulkUntil=0,lastSwat=0,lastChat=0,stillSince=last,lastBlink=0,blinkTold=false,kneading=false;
+ const rnd=a=>a[Math.random()*a.length|0];
  const clampf=(v,a,b)=>Math.max(a,Math.min(b,v));
  function hop(power){if(hopping)return;hopping=true;hv=-(power||560);hy=-1}
  const setAct=(a,ms)=>{cat.dataset.a=a;clearTimeout(setAct.t);setAct.t=setTimeout(()=>{cat.dataset.a=''},ms)};
+ const setTail=(t,ms)=>{cat.dataset.t=t;clearTimeout(setTail.t);setTail.t=setTimeout(()=>{cat.dataset.t=''},ms)};
  const setPose=p=>{if(p!==pose){pose=p;cat.dataset.p=p}};
  const say=(t,ms)=>{bub.textContent=t;const cx=x+SZ()/2;bub.style.setProperty('--bo',(cx<110?110-cx:cx>W()-110?W()-110-cx:0)+'px');bub.classList.add('on');clearTimeout(say.t);say.t=setTimeout(()=>bub.classList.remove('on'),ms||3400)};
  function setMood(m,announce){if(m===mood&&!announce)return;const changed=m!==mood;mood=m;cat.dataset.m=m;if(announce&&changed){mlab.textContent=MOODS[m].label;mlab.classList.add('on');clearTimeout(setMood.t);setMood.t=setTimeout(()=>mlab.classList.remove('on'),2400)}}
  function wake(){if(sleeping){sleeping=false;if(st=='home')setPose('sit')}}
  function go(a,b,s2){tx=a;ty=b;st=s2;setPose('walk');cat.classList.toggle('fl',a<x)}
- function visit(){wake();visits++;go(clampf(pm?px+90:W()*.5,12,W()-SZ()-12),clampf(pm?py+36:floor(),90,floor()),'walk')}
+ function visit(){wake();visits++;const gx=clampf(pm?px+90:W()*.5,12,W()-SZ()-12);
+  if(Math.random()<.25){go(clampf((x+gx)/2,12,W()-SZ()-12),floor(),'snub');return}
+  go(gx,clampf(pm?py+36:floor(),90,floor()),'walk')}
  function startAct(now){const idle=now-lastAct,pool=[['tilt',1],['groom',1],['stretch',1],['hop',1.3],['wiggle',.7],['look',1]];
   if(idle>800)pool.push(['wander',1.5]);if(idle>1400)pool.push(['zoom',.7]);if(pm&&idle<1400&&Math.abs(px-(x+SZ()/2))>240)pool.push(['chase',1.6]);
   let t=pool.reduce((a,b)=>a+b[1],0)*Math.random(),pick='tilt';for(const p of pool){t-=p[1];if(t<=0){pick=p[0];break}}
@@ -26,16 +34,33 @@
   else if(pick=='hop'){hop(600);if(mood=='shark')say('rawr!',1200)}else if(pick=='look')lookUntil=now+2200;
   else if(pick=='wander'){go(clampf(60+Math.random()*(W()-SZ()-120),12,W()-SZ()-12),floor(),'patrol')}
   else if(pick=='zoom'){const a=clampf(40+Math.random()*(W()*.3),12,W()-SZ()-12),b=clampf(W()*.6+Math.random()*(W()*.3),12,W()-SZ()-12);zw=[b,a,clampf(hx,12,W()-SZ()-12)];go(a,floor(),'zoom');say('zoomies!!',1400)}
-  else if(pick=='chase'){go(clampf(px-SZ()/2,12,W()-SZ()-12),floor(),'chase');say('got you!',1200)}}
+  else if(pick=='chase'){const tgt=clampf(px-SZ()/2,12,W()-SZ()-12);st='stalk';setAct('crouch',950);setTimeout(()=>{if(st!=='stalk')return;go(tgt,floor(),'pounce');hop(640)},950)}}
  function retreat(){bub.classList.remove('on');go(hx,floor(),'back');cool=performance.now()+15000}
- function arrive(){if(st=='zoom'){if(zw.length){tx=zw.shift();cat.classList.toggle('fl',tx<x);return}st='home';hx=x;setPose('sit');hop(420);return}if(st=='chase'){st='home';hx=x;setPose('sit');hop(760);setAct('wiggle',900);return}if(st=='walk'){st='greet';setPose('sit');gs={x:px,y:py};const g=MOODS[mood].greet;say(g[Math.floor(Math.random()*g.length)],3800);setTimeout(()=>{if(st=='greet')retreat()},4300)}else{st='home';hx=x;setPose(sleeping?'sleep':'sit')}}
+ function arrive(){if(st=='pounce'){st='home';hx=x;setPose('sit');say(rnd(['got it!','…missed.','mine now.']),1300);return}
+ if(st=='snub'){st='home';hx=x;setPose('sit');setAct('groom',2300);say(rnd(['…later.','*pretends not to hear*','busy.']),1800);cool=performance.now()+12000;return}
+ if(st=='zoom'){if(zw.length){tx=zw.shift();cat.classList.toggle('fl',tx<x);return}st='home';hx=x;setPose('sit');hop(420);return}if(st=='chase'){st='home';hx=x;setPose('sit');hop(760);setAct('wiggle',900);return}if(st=='walk'){st='greet';setPose('sit');gs={x:px,y:py};const g=MOODS[mood].greet;setTail('happy',4000);say(g[Math.floor(Math.random()*g.length)],3800);setTimeout(()=>{if(st=='greet')retreat()},4300)}else{st='home';hx=x;setPose(sleeping?'sleep':'sit')}}
  const act=()=>{lastAct=performance.now();wake();if(st=='walk'||st=='greet')retreat()};
  addEventListener('pointermove',e=>{px=e.clientX;py=e.clientY;pm=true;lastAct=performance.now();wake();if(held){if(!held.m&&Math.hypot(e.clientX-held.sx,e.clientY-held.sy)>6){held.m=true;st='held';setPose('sit');cat.classList.add('held');bub.classList.remove('on')}return}
   if(st=='greet'&&gs&&Math.hypot(px-gs.x,py-gs.y)>70)retreat();else if(st=='walk'){tx=clampf(px+90,12,W()-SZ()-12);ty=clampf(py+36,90,floor())}});
+ addEventListener('pointermove',e=>{const now=performance.now(),dist=Math.hypot(e.clientX-(pet.px??e.clientX),e.clientY-(pet.py??e.clientY)),dtm=now-(pet.mt||now);pet.px=e.clientX;pet.py=e.clientY;pet.mt=now;if(dist>3)stillSince=now;
+  if(held||st!=='home'||sleeping||e.pointerType=='touch')return;
+  if(e.target.closest&&e.target.closest('#cat')){ // stroking the cat
+   if(now-pet.last>600){pet.d=0;pet.start=now}pet.last=now;pet.d+=dist;
+   if(now-pet.start>7000){pet.d=0;pet.start=now+4000;setAct('swat',600);setTail('flick',1500);say(rnd(['ok, that’s enough.','too much petting.','hiss. (politely)']),1800);sulkUntil=now+8000;cool=now+12000;
+    setTimeout(()=>{if(st=='home')go(clampf(x+(x>W()/2?-260:260),12,W()-SZ()-12),floor(),'patrol')},700);return}
+   if(pet.d>220&&now>purrUntil-800){purrUntil=now+2200;setAct('purr',2200);setTail('happy',2200);
+    const t=document.createElement('span');t.className='heart prr';t.textContent=rnd(['prrr','prrrr…','♡']);t.style.left=(x+SZ()*.5+(Math.random()*40-20))+'px';t.style.top=(y+10)+'px';document.body.appendChild(t);setTimeout(()=>t.remove(),1300)}
+   return}
+  if(pose!=='sit'||cat.dataset.a)return;
+  if(e.clientY<H()*.22&&dist/Math.max(8,dtm)>1.6&&now-lastChat>20000){lastChat=now;setAct('chatter',1200);say(rnd(['ek-ek-ek… bird?','*chatters at the bird*']),1500);return}
+  const cx=x+SZ()/2,cy=y+CH()*.8;if(Math.hypot(e.clientX-cx,e.clientY-cy)<SZ()*.75&&now-lastSwat>5000&&Math.random()<.5){lastSwat=now;setAct(e.clientX<cx?'swatL':'swat',600)}});
  ['wheel','keydown','touchstart'].forEach(ev=>addEventListener(ev,act,{passive:true}));
  addEventListener('resize',()=>{if(st=='home'||st=='away'){hx=clampf(hx,8,W()-SZ()-8);x=tx=hx;y=ty=floor()}});
  cat.addEventListener('pointerdown',e=>{held={sx:e.clientX,sy:e.clientY,m:false};try{cat.setPointerCapture(e.pointerId)}catch(_){}wake();lastAct=performance.now()});
  const release=()=>{if(!held)return;const m=held.m;held=null;cat.classList.remove('held');if(m){st='fall';vy=0;return}
+   const tn=performance.now();if(tn<sulkUntil){say('…',900);return}
+   clicks=clicks.filter(t=>tn-t<6000);clicks.push(tn);if(clicks.length>=4){clicks=[];sulkUntil=tn+10000;cool=tn+15000;setTail('flick',1600);say(rnd(['hmph.','ok, enough clicking.','i need some space.']),1800);
+    setTimeout(()=>go(x>W()/2?40:W()-SZ()-40,floor(),'patrol'),700);return}
    const nm=ORDER[(ORDER.indexOf(mood)+1)%ORDER.length];manualUntil=performance.now()+25000;setMood(nm,true);say(MOODS[nm].line,2800);
    for(let i=0;i<4;i++){const h=document.createElement('span');h.className='heart';h.textContent='♡';h.style.left=(x+SZ()/2+(Math.random()*44-22))+'px';h.style.top=(y+8)+'px';h.style.animationDelay=i*.09+'s';document.body.appendChild(h);setTimeout(()=>h.remove(),1500)}};
  cat.addEventListener('pointerup',release);cat.addEventListener('pointercancel',release);
@@ -45,15 +70,19 @@
   if(pose=='sit'){if(now<lookUntil){px2=(Math.sin(now/260)*.9)}const cx=x+SZ()/2,cy=y+CH()*.4,dx=px-cx,dy=py-cy,dd=Math.hypot(dx,dy)||1,k=Math.min(1,dd/300),sc=mood=='shark'?5:3.2,tr=now<lookUntil?`translate(${(px2*sc).toFixed(2)}px,${(Math.sin(now/410)*sc*.3).toFixed(2)}px)`:`translate(${(dx/dd*sc*k).toFixed(2)}px,${(dy/dd*sc*.8*k).toFixed(2)}px)`;eyeEls.forEach(e=>{if(e)e.style.transform=tr})}
   if(now>manualUntil&&typeof secs!=='undefined'){let c=0;tops.forEach((t,i)=>{if(scrollY+innerHeight*.5>=t)c=i});const id=secs[c][0];if(id!==lastSec){lastSec=id;if(SM[id])setMood(SM[id],st=='home'&&seen)}}
   if(Math.abs(scrollY-lastY)>1){lastY=scrollY;lastAct=now;wake();if(st=='walk'||st=='greet')retreat()}
+  if(st=='home'&&!sleeping&&pose=='sit'&&!cat.dataset.a&&pm&&now-stillSince>1800&&now-lastBlink>9000&&Math.hypot(px-(x+SZ()/2),py-(y+CH()/2))<260){
+   lastBlink=now;setAct('slowblink',1500);if(!blinkTold){blinkTold=true;setTimeout(()=>say('slow blink = cat for “i trust you” ♡',3200),1500)}}
   if(st=='home'&&!sleeping&&pose=='sit'&&now>nextAct&&!hopping&&!cat.dataset.a)startAct(now);
   if(st=='home'){
-   if(now-lastAct>2700&&now>cool&&visits<9&&document.hasFocus())visit();
-   else if(now-lastAct>32000&&!sleeping){sleeping=true;setPose('sleep')}
+   if(now-lastAct>2700&&now>cool&&now>sulkUntil&&visits<9&&document.hasFocus())visit();
+   else if(now-lastAct>32000&&!sleeping&&!kneading){kneading=true;setAct('knead',2200);
+    setTimeout(()=>{if(st!=='home'||performance.now()-lastAct<30000){kneading=false;return}cat.classList.add('circle');
+     setTimeout(()=>{cat.classList.remove('circle');kneading=false;if(st=='home'&&performance.now()-lastAct>30000){sleeping=true;setPose('sleep')}},700)},2200)}
    }
   if(st=='held'&&held){x=px-SZ()/2;y=py-CH()*.35}
-  if(st=='fall'){vy+=1900*dt;y+=vy*dt;const fl=floor();if(y>=fl){y=fl;vy=-vy*.34;if(Math.abs(vy)<140){vy=0;st='home';hx=x=clampf(x,8,W()-SZ()-8);setPose('sit')}}}
+  if(st=='fall'){vy+=1900*dt;y+=vy*dt;const fl=floor();if(y>=fl){y=fl;vy=-vy*.34;if(Math.abs(vy)<140){vy=0;st='home';hx=x=clampf(x,8,W()-SZ()-8);setPose('sit');setTimeout(()=>{if(st=='home'){setAct('groom',2300);say(rnd(['i meant to do that.','…nobody saw that.','graceful. as always.']),2200)}},350)}}}
   if(hopping){hv+=1900*dt;hy+=hv*dt;if(hy>=0){hy=0;hv=0;hopping=false;cat.classList.add('squash');setTimeout(()=>cat.classList.remove('squash'),260)}}
-  if(st=='walk'||st=='back'||st=='patrol'||st=='zoom'||st=='chase'){const ddx=tx-x,ddy=ty-y,d=Math.hypot(ddx,ddy),sp=(st=='zoom'?760:st=='chase'?560:300)*dt;cat.classList.toggle('fl',ddx<-1);if(d<=sp){x=tx;y=ty;arrive()}else{x+=ddx/d*sp;y+=ddy/d*sp}}
+  if(st=='walk'||st=='back'||st=='patrol'||st=='zoom'||st=='chase'||st=='pounce'||st=='snub'){const ddx=tx-x,ddy=ty-y,d=Math.hypot(ddx,ddy),sp=(st=='pounce'?900:st=='zoom'?760:st=='chase'?560:300)*dt;cat.classList.toggle('fl',ddx<-1);if(d<=sp){x=tx;y=ty;arrive()}else{x+=ddx/d*sp;y+=ddy/d*sp}}
   if(seen)cat.style.transform=`translate3d(${x.toFixed(1)}px,${(y+hy).toFixed(1)}px,0)`;
   requestAnimationFrame(tick)}
  requestAnimationFrame(tick);

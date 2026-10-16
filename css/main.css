@@ -639,3 +639,32 @@ nav a:hover{color:var(--esp)}nav a.on,nav a.hv{color:#fff}nav.hovering a.on:not(
 
 /* while a full-screen page covers the home page, its always-on overlays are switched off */
 body.pgheld #grain,body.pgheld #vig,body.pgheld #trail{display:none}
+
+/* ---- cat habits (js/cat.js) ---- */
+#cat .ctail{transform-box:view-box;transform-origin:138px 178px;animation:tsway 4.5s ease-in-out infinite}
+#cat[data-t=happy] .ctail{animation:tsway 1s ease-in-out infinite}
+#cat[data-t=flick] .ctail{animation:tflick .26s ease-in-out infinite}
+@keyframes tsway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(7deg)}}
+@keyframes tflick{0%,100%{transform:rotate(-8deg)}50%{transform:rotate(14deg)}}
+#cat [id^=ceyes]>*{transform-box:fill-box;transform-origin:center;transition:transform .35s}
+#cat[data-a=slowblink] [id^=ceyes]>*{animation:sblink 1.5s ease-in-out}
+@keyframes sblink{0%,100%{transform:scaleY(1)}35%,62%{transform:scaleY(.1)}}
+#cat[data-a=purr] [id^=ceyes]>*,#cat[data-a=knead] [id^=ceyes]>*{transform:scaleY(.42)}
+#cat[data-a=purr] .cbody{animation:purr .09s linear infinite}
+@keyframes purr{50%{transform:translateY(.7px)}}
+.heart.prr{font:500 11px 'IBM Plex Mono',monospace;color:var(--esp);letter-spacing:.06em}
+#cat[data-a=crouch] .sit{transform-origin:50% 100%;animation:crouch .95s ease-in-out forwards}
+#cat[data-a=crouch] .cbody{animation:awig .14s ease-in-out .35s infinite}
+@keyframes crouch{0%{transform:none}25%,100%{transform:scale(1.07,.84)}}
+#cat .pawL,#cat .pawR{transform-box:fill-box;transform-origin:50% 100%}
+#cat[data-a=knead] .pawL{animation:knead .5s ease-in-out infinite}
+#cat[data-a=knead] .pawR{animation:knead .5s ease-in-out .25s infinite}
+@keyframes knead{50%{transform:translateY(-6px) scaleX(.85)}}
+#cat.circle .sit{transform-origin:50% 100%;animation:circ .7s ease-in-out}
+@keyframes circ{50%{transform:scaleX(-1) translateY(-4px)}}
+#cat[data-a=swat] .pawR{animation:swatR .55s cubic-bezier(.2,1.6,.4,1)}
+#cat[data-a=swatL] .pawL{animation:swatL .55s cubic-bezier(.2,1.6,.4,1)}
+@keyframes swatR{35%{transform:translate(18px,-46px) rotate(-30deg)}60%{transform:translate(30px,-28px)}}
+@keyframes swatL{35%{transform:translate(-18px,-46px) rotate(30deg)}60%{transform:translate(-30px,-28px)}}
+#cat[data-a=chatter] .chd{animation:chat .08s linear 14}
+@keyframes chat{50%{transform:translateY(-1.5px) rotate(-2deg)}}
