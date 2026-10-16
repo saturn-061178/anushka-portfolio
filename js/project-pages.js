@@ -57,6 +57,10 @@ function pjHTML(p,i){const nx=(i+1)%P.length,pv=(i+P.length-1)%P.length,secs=pjS
 // ---- image viewer (click any frame) ----
 const glb=document.createElement('div');glb.id='glb';glb.innerHTML='<button class="lbn prev" type="button" aria-label="Previous image">←</button><img alt=""><button class="lbn next" type="button" aria-label="Next image">→</button><button class="lbx" type="button" aria-label="Close">✕</button><span class="lbc mo"></span>';document.body.appendChild(glb);
 let gList=[],gCur=0;
+// keyboard: focus moves into the viewer, Tab stays inside it, and focus returns to the frame when it closes
+glb.setAttribute('role','dialog');glb.setAttribute('aria-modal','true');glb.setAttribute('aria-label','Image viewer');glb.querySelector('.lbc').setAttribute('aria-live','polite');
+let gFrom=null;new MutationObserver(()=>{const on=glb.classList.contains('on');if(on&&!gFrom){gFrom=document.activeElement;glb.querySelector('.lbx').focus()}else if(!on&&gFrom){const f=gFrom;gFrom=null;glb.classList.remove('zm');if(f&&f.isConnected)f.focus()}}).observe(glb,{attributes:true,attributeFilter:['class']});
+glb.addEventListener('keydown',e=>{if(e.key!='Tab')return;const b=[...glb.querySelectorAll('button')],i=b.indexOf(document.activeElement);e.preventDefault();b[(i+(e.shiftKey?b.length-1:1))%b.length].focus()});
 function gShow(){if(!gList.length)return;gZoom(false);gCur=(gCur+gList.length)%gList.length;const im=glb.querySelector('img');im.style.animation='none';im.src=gList[gCur].src;im.alt=gList[gCur].alt;im.offsetWidth;im.style.animation='';glb.querySelector('.lbc').textContent=String(gCur+1).padStart(2,'0')+' / '+String(gList.length).padStart(2,'0')+'  ·  CLICK IMAGE TO ZOOM';glb.classList.add('on')}
 // zoom: click the image to look closer; move the pointer (or drag a finger) to look around
 function gAim(x,y){const im=glb.querySelector('img'),r=im.getBoundingClientRect();im.style.transformOrigin=Math.max(0,Math.min(100,(x-r.left)/r.width*100))+'% '+Math.max(0,Math.min(100,(y-r.top)/r.height*100))+'%'}

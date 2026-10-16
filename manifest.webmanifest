@@ -1,0 +1,21 @@
+{
+ "name": "Anushka Chowdhary — Product Designer",
+ "short_name": "Anushka",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#F8F5F0",
+ "theme_color": "#34201C",
+ "icons": [
+  {
+   "src": "apple-touch-icon.png",
+   "sizes": "180x180",
+   "type": "image/png"
+  },
+  {
+   "src": "favicon.svg",
+   "sizes": "any",
+   "type": "image/svg+xml"
+  }
+ ]
+}

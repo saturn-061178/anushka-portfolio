@@ -10,7 +10,10 @@
 //   intro    where the title and text sit on a full-screen page: 'after-hero' or 'end'
 const cv0='<svg viewBox="0 0 300 200" preserveAspectRatio="xMidYMid slice">';
 const img=(src,alt)=>'<img loading="lazy" decoding="async" src="'+src+'" alt="'+alt+'">';
-const frames=(dir,nums,alt,ratio)=>nums.map(n=>({src:'assets/'+dir+n+'.webp',alt:alt+' '+n,ratio:typeof ratio=='function'?ratio(n):ratio}));
+// alt: a prefix ("…, frame" + number), or an object/array of full descriptions keyed by frame number
+const frames=(dir,nums,alt,ratio)=>nums.map(n=>({src:'assets/'+dir+n+'.webp',alt:typeof alt=='string'?alt+' '+n:alt[n],ratio:typeof ratio=='function'?ratio(n):ratio}));
+const ALT_BHM={"1": "BHM Projects title frame: Board of Hostel Management, IIT Delhi", "2": "Introduction: why the hostel mess needed a digital system, beside the mess management login screen on a laptop", "3": "Quotes from two students, at Himadri and Shivalik hostels, about long queues, menu confusion and rebate delays", "4": "Problem statement: a mess manager’s quote, and the problems facing mess facilities that serve over 8,000 students across 12+ hostels", "5": "Design brief: six core requirements, from real-time consumption tracking to a simple, role-based interface", "6": "Wireframes: ID card, today’s meal, notifications, payment and QR code screens", "7": "Wireframes: QR scanner, payments, complaint form, complaint status and loading screens", "8": "Wireframes: splash, Kerberos login, error and not-found states and a progress screen, with notes on the wireframing approach", "9": "Student app home screen, annotated: profile, hostel photo collage, extra and night mess payments, and the bottom navigation bar", "10": "Mess menu calendar with today’s meals, and the slide-to-pay payment screen, annotated", "11": "Rebate status list and the complaint form, annotated", "12": "Heuristic evaluation of seven app screens against Nielsen’s usability principles", "13": "Mess Management Portal for admins: the Kerberos login screen", "14": "Admin user-management table, with notes on the dashboard, meals, consumption tracking and rebate management", "15": "Admin portal: the create-user dialog and the meal token tool", "16": "Data logic and food forecasting system: user management, standardised inputs, live consumption tracking, feedback loops, rebate approval and complaint resolution", "17": "Colour palette: warm cream, warm orange, light orange, grey, black and white", "18": "Typography: Plus Jakarta Sans, Raleway and Inter"};
+const ALT_EDC={"2": "eDC IIT Delhi 2024–25 title frame with three logo variants", "3": "Founder’s Feed carousel on boAt: the objective and four carousel slides", "4": "boAt carousel: what I designed and its impact, beside a red-toned photo collage", "5": "BookMyShow business deep-dive carousel: the objective and slides on its founders, business model, growth and valuation", "6": "BookMyShow carousel: what I designed, with two illustrated ad frames, ‘Skip the queue’ and ‘Dinner dates’", "7": "BookMyShow carousel impact, beside an illustrated poster of two friends at the cinema", "8": "Colour palette (red, black and light grey) and typography (Plus Jakarta Sans, Raleway and Inter) for the EDC posts", "9": "A collage of other EDC posts: a tax-saving guide, a hiring post, the campus ambassador programme, carbon credits and founder stories", "10": "Closing note on how designing at EDC IIT Delhi shaped Anushka’s approach to design"};
 const seq=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
 
 const PROJECTS=[
@@ -18,7 +21,7 @@ const PROJECTS=[
   cover:img('assets/bhm/1.webp','BHM projects, Board of Hostel Management: title frame'),
   lead:'The UI/UX journey of the mess management app for the Board of Hostel Management, IIT Delhi.',
   meta:[['FRAMES','18']],intro:'end',
-  sections:[{kind:'slides',stack:true,images:frames('bhm/',seq(1,18),'BHM mess management app, frame','16/9')}]},
+  sections:[{kind:'slides',stack:true,images:frames('bhm/',seq(1,18),ALT_BHM,'16/9')}]},
 
  {slug:'tedx',skill:'Events &amp; graphic design',title:'TEDxIIT Delhi',tags:'Events · Graphic design',rail:'TEDx',group:'b',accent:'#EB0028',icon:'bulb',
   cover:'<img loading="lazy" decoding="async" src="assets/tedx/banner.webp" alt="TEDxIIT Delhi event banner" style="object-position:50% 50%">',
@@ -58,8 +61,8 @@ const PROJECTS=[
   lead:'Branding and design work for the Entrepreneurship Development Cell, IIT Delhi, 2024–25.',
   more:['EDC is a student-led body that promotes entrepreneurship, innovation and startup culture on campus, bridging the gap between ideas and execution through speaker sessions, startup showcases, design initiatives and founder-focused content.'],
   meta:[['FRAMES','9']],intro:'after-hero',dark:'#000',
-  sections:[{kind:'slides',images:frames('edc/',[2],'EDC IIT Delhi 2024–25, frame','16/9')},
-   {title:'The work',count:'8 FRAMES',kind:'slides',stack:true,images:frames('edc/',seq(3,10),'EDC IIT Delhi 2024–25, frame',n=>n==7?'1920/692':n==8?'1920/781':n==10?'1920/356':'16/9')}]},
+  sections:[{kind:'slides',images:frames('edc/',[2],ALT_EDC,'16/9')},
+   {title:'The work',count:'8 FRAMES',kind:'slides',stack:true,images:frames('edc/',seq(3,10),ALT_EDC,n=>n==7?'1920/692':n==8?'1920/781':n==10?'1920/356':'16/9')}]},
 
  {slug:'becon24',skill:'Event campaigns &amp; social posts',title:'BECon’24',tags:'Events · Visual design',rail:'BECON’24',group:'b',accent:'#37C6E6',icon:'bulb',
   cover:img('assets/becon24/post-4.webp','Panel discussion on stage at BECon 2024'),
