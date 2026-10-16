@@ -2,10 +2,20 @@
 // Styles and motion live in css/projects.css.
 
 // ---- markup ----
+// where the Projects page was when a case was opened, so going back returns to the same spot
+let wkBack=null;
+// projects this visitor has opened (shown as VIEWED on the Projects page)
+function pjViewed(){try{return JSON.parse(localStorage.getItem('seenCases')||'[]')}catch(e){return []}}
+function pjViewedAdd(s){try{const a=pjViewed();if(!a.includes(s)){a.push(s);localStorage.setItem('seenCases',JSON.stringify(a))}}catch(e){}}
+// once per browser, on a device with a keyboard: mention the arrow keys
+function pjTip(){if(!matchMedia('(hover:hover)').matches)return;try{if(localStorage.getItem('kbTip'))return;localStorage.setItem('kbTip','1')}catch(e){return}setTimeout(()=>toast('Tip: use ← → to move between projects',3600),1600)}
 // Cookstove and Bhilwa are long case studies kept in js/data/case-studies-data.js, which is fetched only when needed
 const CS_SLUGS=['cookstove','bhilwa'];
 function csLoad(done){if(csLoad.s){csLoad.s.addEventListener('load',done);return}const s=csLoad.s=document.createElement('script');s.src='js/data/case-studies-data.js?v='+(BUILD_V||'');s.onload=done;document.head.appendChild(s)}
 function slowNet(){const c=navigator.connection;return !!c&&(c.saveData||/2g|3g/.test(c.effectiveType||''))}
+// "jump to" chips for the titled sections of a long page (only when there are two or more)
+function pjJump(p){const t=pjSecs(p).filter(s=>s.title&&s.kind!='note');if(t.length<2)return '';
+ return '<div class="pjjump mo pjr" style="--r:1" role="navigation" aria-label="Sections"><span>JUMP TO</span>'+t.map((s,k)=>'<button type="button" data-jump="pjs-'+(k+1)+'">'+s.title+'</button>').join('')+'</div>'}
 // a project with no `sections` yet still gets a page: its cover, its illustration and a short note
 const PJ_DEFAULT=[{kind:'art'},{kind:'note',title:'Full write-up coming soon',text:'The complete case study for this project is being written and will be added here.'}];
 function pjSecs(p){return p.sections||PJ_DEFAULT}
@@ -13,7 +23,7 @@ function pjTitle(t){let n=0;return t.split(' ').map(w=>'<span class="w">'+[...w]
 function pjIntro(p,i){const parts=p.tags.split(' · '),no=String(i+1).padStart(2,'0'),of=String(P.length).padStart(2,'0');
  return '<header class="pji"><div class="pji-a"><p class="mo pgk pjr">SELECTED WORK · '+p.tags.toUpperCase()+'</p>'
   +'<h1 class="pgt pjt" aria-label="'+p.title+'"><span aria-hidden="true">'+pjTitle(p.title)+'</span></h1>'
-  +'<div class="pgtags mo pjr" style="--r:1">'+parts.map(x=>'<span>'+x+'</span>').join('')+'</div></div>'
+  +'<div class="pgtags mo pjr" style="--r:1">'+parts.map(x=>'<span>'+x+'</span>').join('')+'</div>'+pjJump(p)+'</div>'
   +(ILLUS[p.slug]?'<div class="pji-ill pjr" style="--r:2">'+ILLUS[p.slug]+'</div>':'')
   +'<div class="pgg"><div class="pjr" style="--r:2"><p class="pglead">'+p.lead+'</p>'+(p.more||[]).map(t=>'<p class="pgp">'+t+'</p>').join('')+'</div>'
   +'<dl class="pgmeta mo pjr" style="--r:3"><dt>TYPE</dt><dd>'+parts[0]+'</dd><dt>FIELD</dt><dd>'+(parts[1]||parts[0])+'</dd><dt>CASE</dt><dd>'+no+' of '+of+'</dd>'+(p.meta||[]).map(r=>'<dt>'+r[0]+'</dt><dd>'+r[1]+'</dd>').join('')+'</dl></div></header>'}
@@ -32,7 +42,7 @@ function pjSections(p){let n=0,h=0;
   else if(s.kind=='wall')body='<div class="gw c'+s.images.length+'" style="--ar:'+(s.ratio||'1/1')+'">'+s.images.map((m,k)=>tile(m,'--d:'+k)).join('')+'</div>';
   else if(s.kind=='grid'){const cols=s.cols||3;body='<div class="gg c'+cols+'" style="--ar:'+(s.ratio||'4/5')+'">'+s.images.map((m,k)=>tile(m,'--d:'+(k%cols))).join('')+'</div>'}
   else body='<div class="gsl'+(s.stack?' stk':'')+'">'+s.images.map((m,k)=>tile(m,'aspect-ratio:'+m.ratio+(s.stack?';view-transition-name:fr-'+k:''))).join('')+'</div>';
-  return '<section class="pjs">'+head+body+'</section>'})}
+  return '<section class="pjs"'+(head?' id="pjs-'+h+'"':'')+'>'+head+body+'</section>'})}
 // number of stacked full-width frames (drives the frame counter)
 function pjFrames(p){return pjSecs(p).filter(s=>s.kind=='slides'&&s.stack).reduce((n,s)=>n+s.images.length,0)}
 // the control bar: Story / Grid / Play for pinned frames, and the Motion switch on every page
@@ -87,6 +97,7 @@ function pjPlay(){if(playT){pjStop();return}const d=pjDeck();if(!d)return;if(d.c
  const step=()=>{const k=pjCurrent();if(k>=n-1){pjStop();return}pageEl.scrollTo({top:pjFrameTop(k+1),behavior:still()?'auto':'smooth'})};step();playT=setInterval(step,2800)}
 ['wheel','touchstart','keydown'].forEach(t=>addEventListener(t,()=>{if(playT)pjStop()},{passive:true}));
 pageEl.addEventListener('click',e=>{
+ const jb=e.target.closest('[data-jump]');if(jb){const t=document.getElementById(jb.dataset.jump);if(t)pageEl.scrollTo({top:t.offsetTop-70,behavior:still()?'auto':'smooth'});return}
  const c=e.target.closest('.pjctl button');if(c){if(c.dataset.view)pjView(c.dataset.view);else if('play' in c.dataset)pjPlay();else if('motion' in c.dataset)setMotion(still());else if('share' in c.dataset)pjShare(c);return}
  const snd=e.target.closest('.gvb');if(snd){const v=snd.parentNode.querySelector('video');snd.parentNode.classList.remove('hold');snd.parentNode.dataset.go=1;v.muted=!v.muted;if(v.paused)v.play();snd.textContent=v.muted?'SOUND OFF':'SOUND ON';snd.setAttribute('aria-pressed',String(!v.muted));return}
  const film=e.target.closest('.gv');if(film){const v=film.querySelector('video');film.classList.remove('hold');film.dataset.go=1;v.paused?v.play():v.pause();return}
@@ -125,9 +136,9 @@ function pjReset(){pjStop();glb.classList.remove('on');pageEl.classList.remove('
 const renderCaseStudy=renderCase,renderWorkBase=renderWork,closePgBase=closePg;
 renderWork=function(){pjReset();renderWorkBase()};
 closePg=function(h){pageEl.querySelectorAll('video').forEach(v=>v.pause());closePgBase(h)};
-renderCase=function(i){const p=PROJECTS[i];pjReset();
+renderCase=function(i){const p=PROJECTS[i];if(pageEl.classList.contains('wk'))wkBack={y:pageEl.scrollTop};if(wkBack)wkBack.slug=p.slug;pjViewedAdd(p.slug);pjTip();pjReset();
  if(p.accent)pageEl.style.setProperty('--ac',p.accent);
- if(CS_SLUGS.includes(p.slug)){if(typeof CS_DATA=='undefined'){csLoad(()=>{if(location.hash=='#/case/'+p.slug){renderCase(i);if(typeof cbHeader=='function')cbHeader()}});return}renderCaseStudy(i);pageMotion(i);return}
+ if(CS_SLUGS.includes(p.slug)){if(typeof CS_DATA=='undefined'){pageEl.classList.remove('cs');pageEl.innerHTML='<div class="pjload mo" role="status">LOADING '+p.title.toUpperCase()+'…</div>';csLoad(()=>{if(location.hash=='#/case/'+p.slug){renderCase(i);if(typeof cbHeader=='function')cbHeader()}});return}renderCaseStudy(i);pageMotion(i);return}
  pageEl.classList.remove('cs');pageEl.classList.add('full');
  if(p.dark){pageEl.classList.add('dk');pageEl.style.setProperty('--pjbg',p.dark)}
  pageEl.innerHTML=pjHTML(p,i);$('#pgb').onclick=()=>{location.hash='#/work'};pageEl.scrollTop=0;pjWatch();pageMotion(i)};

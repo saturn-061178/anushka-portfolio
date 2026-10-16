@@ -211,3 +211,11 @@
 #glb.zm img{transform:scale(2.4);cursor:zoom-out;box-shadow:none}
 #glb.zm .lbn{opacity:.25}
 #glb{overflow:hidden}
+/* section chips at the top of long project pages */
+.pjjump{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:18px}
+.pjjump span{letter-spacing:.12em;opacity:.6;margin-right:4px}
+.pjjump button{padding:8px 14px;border:1.5px solid currentColor;border-radius:99px;background:none;color:inherit;font:inherit;letter-spacing:.08em;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.pjjump button:hover,.pjjump button:focus-visible{background:var(--ac,var(--pink));border-color:var(--ac,var(--pink));color:#1d1210}
+@media(pointer:coarse){.pjjump button{min-height:40px}}
+/* shown while a long case study is fetched */
+.pjload{min-height:70vh;display:grid;place-items:center;letter-spacing:.14em;opacity:.7}

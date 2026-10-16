@@ -7,6 +7,6 @@ addEventListener('hashchange',()=>route());
 addEventListener('keydown',e=>{if(e.key=='Escape'&&pageEl.classList.contains('on')&&!$('#lb').classList.contains('on'))pgEsc()});
 let heldT=0;
 function openPg(t){clearTimeout(heldT);heldT=setTimeout(()=>document.body.classList.add('pgheld'),900);document.body.classList.add('pgopen');pageEl.classList.add('on');pageEl.setAttribute('aria-hidden','false');document.title=t}
-function closePg(h){clearTimeout(heldT);document.body.classList.remove('pgheld');const was=pageEl.classList.contains('on');pageEl.classList.remove('on');pageEl.setAttribute('aria-hidden','true');document.body.classList.remove('pgopen');document.title='Anushka Chowdhary — Product Designer';
+function closePg(h){if(typeof wkBack!='undefined')wkBack=null;clearTimeout(heldT);document.body.classList.remove('pgheld');const was=pageEl.classList.contains('on');pageEl.classList.remove('on');pageEl.setAttribute('aria-hidden','true');document.body.classList.remove('pgopen');document.title='Anushka Chowdhary — Product Designer';
  if(was&&h&&/^#[\w-]+$/.test(h)){const el=document.getElementById(h.slice(1));if(el){target=cur=Math.min(maxS(),el.offsetTop);scrollTo(0,target)}}}
 function pgEsc(){location.hash=location.hash.startsWith('#/case/')?'#/work':'#top'}

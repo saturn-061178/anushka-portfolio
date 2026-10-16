@@ -6,7 +6,7 @@ function wkPanel(p,i){const no=String(i+1).padStart(2,'0');
  return '<a class="wkp" id="wk-'+p.slug+'" href="#/case/'+p.slug+'" data-g="'+p.group+'" data-cur="OPEN CASE" style="--ac:'+(p.accent||'#FF2D55')+'">'
   +'<span class="wkp-no" aria-hidden="true">'+no+'</span>'
   +'<div class="wkp-tx"><span class="mo wkp-k"><b>'+no+'</b> · '+p.tags.toUpperCase()+'</span><h2>'+p.title+'</h2><p>'+p.lead+'</p>'
-  +'<span class="wkp-ft">'+(p.status?'<span class="mo wkp-st">'+p.status+'</span>':'')+(p.meta?'<span class="mo wkp-fact">'+p.meta[0][1]+' '+p.meta[0][0].toLowerCase()+'</span>':'')+'<span class="mo wkp-go">OPEN CASE <i>→</i></span></span></div>'
+  +'<span class="wkp-ft">'+(pjViewed().includes(p.slug)?'<span class="mo wkp-seen">✓ VIEWED</span>':'')+(p.status?'<span class="mo wkp-st">'+p.status+'</span>':'')+(p.meta?'<span class="mo wkp-fact">'+p.meta[0][1]+' '+p.meta[0][0].toLowerCase()+'</span>':'')+'<span class="mo wkp-go">OPEN CASE <i>→</i></span></span></div>'
   +'<div class="wkp-vis"><div class="wkp-cov">'+p.cover+'</div><div class="wkp-ill">'+(ILLUS[p.slug]||'')+'</div></div></a>'}
 function renderWork(){
  const count=f=>f=='all'?PROJECTS.length:PROJECTS.filter(p=>p.group.split(' ').includes(f)).length;
@@ -25,7 +25,9 @@ function renderWork(){
  $('#pgb').onclick=()=>{location.hash='#top'};
  $$('#pgfil button').forEach(b=>b.addEventListener('click',()=>{$$('#pgfil button').forEach(x=>x.classList.toggle('on',x===b));const f=b.dataset.f;
   $$('#wgrid .wkp').forEach(c=>c.classList.toggle('off',f!='all'&&!c.dataset.g.split(' ').includes(f)))}));
- pageEl.scrollTop=0;
+ // coming back from a project: same scroll position, and the project just viewed is briefly highlighted
+ const back=wkBack;wkBack=null;pageEl.scrollTop=back?back.y:0;
+ if(back&&back.slug){const el=document.getElementById('wk-'+back.slug);if(el){el.classList.add('in','wkp-back');setTimeout(()=>el.classList.remove('wkp-back'),1800)}}
  // the illustration wall and the side index both jump to a project's panel
  $$('.wkc-i,.wkx button').forEach(b=>b.addEventListener('click',()=>{const t=document.getElementById(b.dataset.to);if(!t)return;if(t.classList.contains('off'))$('#pgfil button').click();pageEl.scrollTo({top:t.offsetTop-40,behavior:still()?'auto':'smooth'})}));
  // panels come in as they are scrolled to
